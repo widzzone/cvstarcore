@@ -103,8 +103,14 @@
           <div class="form-card">
             <h4 id="cvTitleHeader" class="mb-4 fw-bold" style="color: #1b7a43;">Data CV Profesional</h4>
             <form id="cvForm" onsubmit="event.preventDefault(); submitData();">
+              
               <input type="hidden" name="username" id="usernameInput">
               <input type="hidden" name="photoBase64" id="photoBase64">
+              <input type="hidden" name="ijazahData" id="ijazahData">
+              <input type="hidden" name="sertifikatData" id="sertifikatData">
+              <input type="hidden" name="certsData" id="certsData">
+              <input type="hidden" name="workExpsData" id="workExpsData">
+              <input type="hidden" name="expsData" id="expsData">
 
               <div class="mb-3"><label class="input-label">Pas Foto Resmi</label><input type="file" id="pasFotoInput" class="elegant-input form-control-sm" accept="image/*" onchange="processPhotoBase64(event)"></div>
               <div class="mb-3"><label class="input-label">Nama Lengkap</label><input type="text" name="name" id="name" class="elegant-input" oninput="updatePreview()" required></div>
@@ -150,7 +156,7 @@
   // PENGATURAN API GOOGLE APPS SCRIPT
   // Masukkan Web App URL dari Code.gs di sini!
   // ==========================================
-  const API_URL = "https://script.google.com/macros/s/AKfycbzS0agZcktEnOvZv10MKfZgw2diyOi0a3ncuk188c3HL_WrYDLKCA5c34yCnJESuZ85/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbyQM4p6MgC5aPPx7rrpi5_97mqSQIFBhN9eZ6KOi6-tSz931OLXsUKKuNIza3wTQ68/exec";
   
   const Toast = Swal.mixin({ toast: true, position: 'top-end', showConfirmButton: false, timer: 3000, timerProgressBar: true });
   function showElegantAlert(type, title, text) { Swal.fire({ icon: type, title: title, text: text, confirmButtonColor: '#15a362', confirmButtonText: 'Mengerti' }); }
@@ -159,7 +165,7 @@
   let certCount = 0; let workExpCount = 0; let projExpCount = 0; let ijazahCount = 0; let lampSertCount = 0;
 
   // ==========================================
-  // JEMBATAN API (MENGGANTIKAN google.script.run)
+  // JEMBATAN API
   // ==========================================
   async function fetchAPI(actionName, payloadData = {}) {
     if(API_URL.includes("ISI_DENGAN_URL")) {
@@ -169,7 +175,6 @@
     try {
       const response = await fetch(API_URL, {
         method: 'POST',
-        // Menggunakan text/plain agar browser tidak memblokir CORS Request ke server Google
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({ action: actionName, data: payloadData })
       });
@@ -317,7 +322,7 @@
   }
 
   // ==========================================
-  // FUNGSI TAMPILAN DOM & UI (Sama seperti sebelumnya)
+  // FUNGSI TAMPILAN DOM & UI
   // ==========================================
   function logout() { 
     Swal.fire({ title: 'Keluar Aplikasi?', text: "Sesi akan diakhiri.", icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#6c757d', confirmButtonText: 'Ya, Keluar' }).then((result) => {
@@ -346,19 +351,33 @@
   function addWorkExp() { workExpCount++; const id = `work-${workExpCount}`; const html = `<div class="dynamic-box" id="${id}"><button type="button" class="btn-remove" onclick="removeElement('${id}')"><i class="fa-solid fa-trash"></i></button><input type="text" class="elegant-input mb-2 work-period" placeholder="Periode (Misal: 2020 - Sekarang)" oninput="updatePreview()"><input type="text" class="elegant-input mb-2 work-company" placeholder="Nama Perusahaan" oninput="updatePreview()"><input type="text" class="elegant-input mb-2 work-role" placeholder="Posisi" oninput="updatePreview()"><textarea class="elegant-input work-desc" rows="2" placeholder="Deskripsi (Pisahkan dgn enter)" oninput="updatePreview()"></textarea></div>`; document.getElementById('workExpContainer').insertAdjacentHTML('beforeend', html); }
   function addProjExp() { projExpCount++; const id = `proj-${projExpCount}`; const html = `<div class="dynamic-box" id="${id}"><button type="button" class="btn-remove" onclick="removeElement('${id}')"><i class="fa-solid fa-trash"></i></button><input type="text" class="elegant-input mb-2 proj-year" placeholder="Tahun (Misal: 2023)" oninput="updatePreview()"><input type="text" class="elegant-input mb-2 proj-client" placeholder="Nama Klien / Project" oninput="updatePreview()"><input type="text" class="elegant-input mb-2 proj-role" placeholder="Posisi di Project" oninput="updatePreview()"><textarea class="elegant-input proj-desc" rows="2" placeholder="Deskripsi pekerjaan (Pisahkan dgn enter)" oninput="updatePreview()"></textarea></div>`; document.getElementById('projExpContainer').insertAdjacentHTML('beforeend', html); }
   function addCert() { certCount++; const id = `cert-${certCount}`; const html = `<div class="dynamic-box" id="${id}"><button type="button" class="btn-remove" onclick="removeElement('${id}')"><i class="fa-solid fa-trash"></i></button><input type="text" class="elegant-input mb-2 cert-no" placeholder="Nomor Sertifikat" oninput="updatePreview()"><input type="text" class="elegant-input mb-2 cert-field" placeholder="Bidang Profesi/Kompetensi" oninput="updatePreview()"><div class="row g-2"><div class="col"><input type="text" class="elegant-input cert-date" placeholder="Tgl Terbit" oninput="updatePreview()"></div><div class="col"><input type="text" class="elegant-input cert-expiry" placeholder="Masa Berlaku" oninput="updatePreview()"></div></div></div>`; document.getElementById('certContainer').insertAdjacentHTML('beforeend', html); }
+
   function removeElement(id) { document.getElementById(id).remove(); updatePreview(); }
 
   function updatePreview() {
     document.getElementById('prev-name').innerText = document.getElementById('name').value || "Nama Lengkap"; document.getElementById('prev-role').innerText = document.getElementById('roleTitle').value || "Posisi"; document.getElementById('prev-edu').innerText = document.getElementById('education').value || "-";
     const formatList = (text) => text.split('\n').filter(l => l.trim() !== '').map(l => `<li>${l}</li>`).join('');
-    
-    let workHTML = ""; let workData = []; document.querySelectorAll('#workExpContainer .dynamic-box').forEach((box, i) => { let period = box.querySelector('.work-period').value; let company = box.querySelector('.work-company').value; let role = box.querySelector('.work-role').value; let desc = box.querySelector('.work-desc').value; workData.push({period, company, role, desc}); workHTML += `<div class="exp-item"><div class="exp-number">${i + 1}.</div><div class="exp-content"><table class="formal-table"><tr><td class="td-label">Periode</td><td class="td-colon">:</td><td>${period}</td></tr><tr><td class="td-label">Perusahaan</td><td class="td-colon">:</td><td>${company}</td></tr><tr><td class="td-label">Posisi</td><td class="td-colon">:</td><td>${role}</td></tr><tr><td class="td-label">Deskripsi</td><td class="td-colon">:</td><td><ul class="desc-list">${formatList(desc)}</ul></td></tr></table></div></div>`; }); document.getElementById('prev-work-exps').innerHTML = workHTML || '<span style="color:#ccc;">-</span>'; document.getElementById('workExpsData').value = JSON.stringify(workData);
-    let projHTML = ""; let projData = []; document.querySelectorAll('#projExpContainer .dynamic-box').forEach((box, i) => { let year = box.querySelector('.proj-year').value; let client = box.querySelector('.proj-client').value; let role = box.querySelector('.proj-role').value; let desc = box.querySelector('.proj-desc').value; projData.push({year, client, role, desc}); projHTML += `<div class="exp-item"><div class="exp-number">${i + 1}.</div><div class="exp-content"><table class="formal-table"><tr><td class="td-label">Tahun</td><td class="td-colon">:</td><td>${year}</td></tr><tr><td class="td-label">Klien / Project</td><td class="td-colon">:</td><td>${client}</td></tr><tr><td class="td-label">Posisi</td><td class="td-colon">:</td><td>${role}</td></tr><tr><td class="td-label">Deskripsi</td><td class="td-colon">:</td><td><ul class="desc-list">${formatList(desc)}</ul></td></tr></table></div></div>`; }); document.getElementById('prev-proj-exps').innerHTML = projHTML || '<span style="color:#ccc;">-</span>'; document.getElementById('expsData').value = JSON.stringify(projData);
-    let certsHTML = ""; let certsData = []; document.querySelectorAll('#certContainer .dynamic-box').forEach(box => { let no = box.querySelector('.cert-no').value; let field = box.querySelector('.cert-field').value; let date = box.querySelector('.cert-date').value; let expiry = box.querySelector('.cert-expiry').value; certsData.push({no, field, date, expiry}); certsHTML += `<div class="exp-item"><div class="exp-number"></div><div class="exp-content"><table class="formal-table"><tr><td class="td-label">Nomor Sertifikat</td><td class="td-colon">:</td><td>${no}</td></tr><tr><td class="td-label">Bidang Profesi</td><td class="td-colon">:</td><td><em>${field}</em></td></tr><tr><td class="td-label">Tanggal Terbit</td><td class="td-colon">:</td><td>${date}</td></tr><tr><td class="td-label">Masa Berlaku</td><td class="td-colon">:</td><td>${expiry}</td></tr></table></div></div>`; }); document.getElementById('prev-certs').innerHTML = certsHTML || '<span style="color:#ccc;">-</span>'; document.getElementById('certsData').value = JSON.stringify(certsData);
+
+    let workHTML = ""; let workData = []; document.querySelectorAll('#workExpContainer .dynamic-box').forEach((box, i) => { let period = box.querySelector('.work-period').value; let company = box.querySelector('.work-company').value; let role = box.querySelector('.work-role').value; let desc = box.querySelector('.work-desc').value; workData.push({period, company, role, desc}); workHTML += `<div class="exp-item"><div class="exp-number">${i + 1}.</div><div class="exp-content"><table class="formal-table"><tr><td class="td-label">Periode</td><td class="td-colon">:</td><td>${period}</td></tr><tr><td class="td-label">Perusahaan</td><td class="td-colon">:</td><td>${company}</td></tr><tr><td class="td-label">Posisi</td><td class="td-colon">:</td><td>${role}</td></tr><tr><td class="td-label">Deskripsi</td><td class="td-colon">:</td><td><ul class="desc-list">${formatList(desc)}</ul></td></tr></table></div></div>`; });
+    document.getElementById('prev-work-exps').innerHTML = workHTML || '<span style="color:#ccc;">-</span>'; document.getElementById('workExpsData').value = JSON.stringify(workData);
+
+    let projHTML = ""; let projData = []; document.querySelectorAll('#projExpContainer .dynamic-box').forEach((box, i) => { let year = box.querySelector('.proj-year').value; let client = box.querySelector('.proj-client').value; let role = box.querySelector('.proj-role').value; let desc = box.querySelector('.proj-desc').value; projData.push({year, client, role, desc}); projHTML += `<div class="exp-item"><div class="exp-number">${i + 1}.</div><div class="exp-content"><table class="formal-table"><tr><td class="td-label">Tahun</td><td class="td-colon">:</td><td>${year}</td></tr><tr><td class="td-label">Klien / Project</td><td class="td-colon">:</td><td>${client}</td></tr><tr><td class="td-label">Posisi</td><td class="td-colon">:</td><td>${role}</td></tr><tr><td class="td-label">Deskripsi</td><td class="td-colon">:</td><td><ul class="desc-list">${formatList(desc)}</ul></td></tr></table></div></div>`; });
+    document.getElementById('prev-proj-exps').innerHTML = projHTML || '<span style="color:#ccc;">-</span>'; document.getElementById('expsData').value = JSON.stringify(projData);
+
+    let certsHTML = ""; let certsData = []; document.querySelectorAll('#certContainer .dynamic-box').forEach(box => { let no = box.querySelector('.cert-no').value; let field = box.querySelector('.cert-field').value; let date = box.querySelector('.cert-date').value; let expiry = box.querySelector('.cert-expiry').value; certsData.push({no, field, date, expiry}); certsHTML += `<div class="exp-item"><div class="exp-number"></div><div class="exp-content"><table class="formal-table"><tr><td class="td-label">Nomor Sertifikat</td><td class="td-colon">:</td><td>${no}</td></tr><tr><td class="td-label">Bidang Profesi</td><td class="td-colon">:</td><td><em>${field}</em></td></tr><tr><td class="td-label">Tanggal Terbit</td><td class="td-colon">:</td><td>${date}</td></tr><tr><td class="td-label">Masa Berlaku</td><td class="td-colon">:</td><td>${expiry}</td></tr></table></div></div>`; });
+    document.getElementById('prev-certs').innerHTML = certsHTML || '<span style="color:#ccc;">-</span>'; document.getElementById('certsData').value = JSON.stringify(certsData);
+
     rebuildGallery('ijazah'); rebuildGallery('sertifikat');
   }
 
-  function downloadPDF() { Toast.fire({ icon: 'info', title: 'Menyiapkan PDF...' }); const element = document.getElementById('cv-document'); const name = document.getElementById('name').value || 'CV'; const opt = { margin: 0.3, filename: 'CV_' + name.replace(/\s+/g, '_') + '.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } }; html2pdf().set(opt).from(element).save().then(() => { Toast.fire({ icon: 'success', title: 'PDF Berhasil Diunduh!' }); }); }
+  function downloadPDF() {
+    Toast.fire({ icon: 'info', title: 'Menyiapkan PDF...' });
+    const element = document.getElementById('cv-document'); const name = document.getElementById('name').value || 'CV';
+    const opt = { margin: 0.3, filename: 'CV_' + name.replace(/\s+/g, '_') + '.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } };
+    html2pdf().set(opt).from(element).save().then(() => { Toast.fire({ icon: 'success', title: 'PDF Berhasil Diunduh!' }); });
+  }
+
+  window.onload = function() { };
 </script>
 
 </body>
