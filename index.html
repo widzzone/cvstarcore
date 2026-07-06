@@ -63,7 +63,7 @@
 <body>
 
   <div id="loginPage" class="premium-login-wrapper">
-    <div class="logo-text-top">starcore<span class="logo-badge">.co</span><br><span style="font-size: 12px; color: #6c757d; font-weight: 500;">v12.0 Complete Documents</span></div>
+    <div class="logo-text-top">starcore<span class="logo-badge">.co</span><br><span style="font-size: 12px; color: #6c757d; font-weight: 500;">v12.1 Drive Link Viewer Fix</span></div>
     <div class="login-card text-center">
       <h1 class="login-title">STARCORE</h1><div class="login-subtitle">Premium CV Builder Application</div><p class="login-desc">Welcome! Please login to your account.</p>
       <div class="mb-3"><label class="input-label">Username</label><input type="text" id="loginUsername" class="elegant-input" placeholder="Enter your Username" required></div>
@@ -97,7 +97,6 @@
       </div>
 
       <div id="cvSection" class="row">
-        <!-- FORM KIRI -->
         <div class="col-lg-5 mb-4" style="height: 83vh; overflow-y: auto; padding-right: 15px;">
           <div class="form-card">
             <h4 id="cvTitleHeader" class="mb-4 fw-bold" style="color: #1b7a43;">Data CV Profesional</h4>
@@ -106,10 +105,8 @@
               <input type="hidden" name="photoBase64" id="photoBase64">
               <input type="hidden" name="ijazahData" id="ijazahData">
               <input type="hidden" name="sertifikatData" id="sertifikatData">
-              <!-- HIDDEN INPUT KTP & NPWP -->
               <input type="hidden" name="ktpData" id="ktpData">
               <input type="hidden" name="npwpData" id="npwpData">
-              
               <input type="hidden" name="certsData" id="certsData">
               <input type="hidden" name="workExpsData" id="workExpsData">
               <input type="hidden" name="expsData" id="expsData">
@@ -132,7 +129,6 @@
                 <div class="d-flex justify-content-between align-items-center mb-2"><span class="fw-semibold text-dark" style="font-size:14px;">Diagram/Sertifikat</span><button type="button" class="btn btn-sm btn-light border" onclick="addLampiran('sertifikat')"><i class="fa-solid fa-plus text-muted"></i></button></div><div id="lampSertifikatContainer"></div>
                 <hr class="my-3 border-secondary opacity-25">
 
-                <!-- BAGIAN KTP & NPWP BARU -->
                 <div class="d-flex justify-content-between align-items-center mb-2"><span class="fw-semibold text-dark" style="font-size:14px;">KTP</span><button type="button" class="btn btn-sm btn-light border" onclick="addLampiran('ktp')"><i class="fa-solid fa-plus text-muted"></i></button></div><div id="ktpContainer"></div>
                 <hr class="my-3 border-secondary opacity-25">
                 
@@ -146,7 +142,6 @@
           </div>
         </div>
 
-        <!-- PREVIEW KANAN -->
         <div class="col-lg-7" style="height: 83vh; overflow-y: auto;">
           <div class="d-flex justify-content-between align-items-center mb-3 sticky-top bg-white p-3 rounded shadow-sm border">
             <h5 class="fw-bold m-0" style="color: #1b7a43;">Preview Dokumen CV</h5>
@@ -185,7 +180,6 @@
             <h4 class="section-title" style="font-size: 15px; margin: 20px 0 10px 0; font-weight: bold;" id="lbl-cert">Sertifikat Profesi/Kompetensi</h4>
             <div id="prev-certs"><span style="color:#ccc;">-</span></div>
             
-            <!-- LAMPIRAN AREA -->
             <div id="lampiran-ijazah-area" style="display: none;" class="cv-lampiran-section">
                 <br clear="all" style="page-break-before:always; mso-break-type:page-break" />
                 <h3 class="lampiran-title" id="lbl-lamp-ijazah" style="text-align: center; margin: 20px 0 15px 0; font-weight: bold; font-size: 16px;">LAMPIRAN IJAZAH</h3>
@@ -198,7 +192,6 @@
                 <div id="lampiran-sertifikat-gallery" style="text-align: center;"></div>
             </div>
 
-            <!-- AREA LAMPIRAN KTP & NPWP BARU -->
             <div id="lampiran-ktp-area" style="display: none;" class="cv-lampiran-section">
                 <br clear="all" style="page-break-before:always; mso-break-type:page-break" />
                 <h3 class="lampiran-title" id="lbl-lamp-ktp" style="text-align: center; margin: 20px 0 15px 0; font-weight: bold; font-size: 16px;">LAMPIRAN KTP</h3>
@@ -227,7 +220,7 @@
 
   let currentUser = ""; let currentRole = ""; let viewingUser = ""; 
   let certCount = 0; let workExpCount = 0; let projExpCount = 0; 
-  let ijazahCount = 0; let lampSertCount = 0; let ktpCount = 0; let npwpCount = 0; // Tambahan counter KTP NPWP
+  let ijazahCount = 0; let lampSertCount = 0; let ktpCount = 0; let npwpCount = 0; 
   
   let isEnglish = false; 
   let originalCVDataCache = null; 
@@ -323,7 +316,6 @@
         if (res.ijazah && res.ijazah.length > 0) { res.ijazah.forEach(base64 => { addLampiran('ijazah'); const last = document.getElementById(`img-ijazah-${ijazahCount}`); last.src = base64; last.classList.remove('d-none'); }); } else { addLampiran('ijazah'); }
         if (res.sertifikat && res.sertifikat.length > 0) { res.sertifikat.forEach(base64 => { addLampiran('sertifikat'); const last = document.getElementById(`img-lampsert-${lampSertCount}`); last.src = base64; last.classList.remove('d-none'); }); } else { addLampiran('sertifikat'); }
         
-        // Load KTP dan NPWP
         if (res.ktp && res.ktp.length > 0) { res.ktp.forEach(base64 => { addLampiran('ktp'); const last = document.getElementById(`img-ktp-${ktpCount}`); last.src = base64; last.classList.remove('d-none'); }); } else { addLampiran('ktp'); }
         if (res.npwp && res.npwp.length > 0) { res.npwp.forEach(base64 => { addLampiran('npwp'); const last = document.getElementById(`img-npwp-${npwpCount}`); last.src = base64; last.classList.remove('d-none'); }); } else { addLampiran('npwp'); }
         
@@ -343,16 +335,21 @@
     }
   }
 
+  // ==========================================
+  // PERBAIKAN: MEMUNGKINKAN LINK GOOGLE DRIVE UNTUK DISIMPAN ULANG (SUBMIT)
+  // ==========================================
   async function submitData() {
     const btn = document.getElementById('btnSubmit'); const originalHTML = btn.innerHTML;
     if (!currentUser) { showElegantAlert('error', 'Sesi Habis', 'Silakan login kembali.'); return; }
     if (isEnglish) { showElegantAlert('warning', 'Peringatan!', 'Silakan kembalikan CV ke Teks Asli (Indonesia) terlebih dahulu sebelum menekan tombol Simpan.'); return; }
 
     let saveTarget = viewingUser ? viewingUser : currentUser;
-    let ijazahArr = []; document.querySelectorAll('.lampiran-data-ijazah').forEach(img => { if(img.src.startsWith('data:image')) ijazahArr.push(img.src); }); 
-    let sertifikatArr = []; document.querySelectorAll('.lampiran-data-sertifikat').forEach(img => { if(img.src.startsWith('data:image')) sertifikatArr.push(img.src); }); 
-    let ktpArr = []; document.querySelectorAll('.lampiran-data-ktp').forEach(img => { if(img.src.startsWith('data:image')) ktpArr.push(img.src); }); 
-    let npwpArr = []; document.querySelectorAll('.lampiran-data-npwp').forEach(img => { if(img.src.startsWith('data:image')) npwpArr.push(img.src); }); 
+    
+    // MENGAMBIL BASE64 ATAU HTTP LINK (DRIVE) UNTUK DIKIRIM KE BACKEND
+    let ijazahArr = []; document.querySelectorAll('.lampiran-data-ijazah').forEach(img => { if(img.src.startsWith('data:image') || img.src.startsWith('http')) ijazahArr.push(img.src); }); 
+    let sertifikatArr = []; document.querySelectorAll('.lampiran-data-sertifikat').forEach(img => { if(img.src.startsWith('data:image') || img.src.startsWith('http')) sertifikatArr.push(img.src); }); 
+    let ktpArr = []; document.querySelectorAll('.lampiran-data-ktp').forEach(img => { if(img.src.startsWith('data:image') || img.src.startsWith('http')) ktpArr.push(img.src); }); 
+    let npwpArr = []; document.querySelectorAll('.lampiran-data-npwp').forEach(img => { if(img.src.startsWith('data:image') || img.src.startsWith('http')) npwpArr.push(img.src); }); 
     
     let payload = { username: saveTarget, name: document.getElementById('name').value, roleTitle: document.getElementById('roleTitle').value, education: document.getElementById('education').value, photoBase64: document.getElementById('photoBase64').value, workExpsData: document.getElementById('workExpsData').value, expsData: document.getElementById('expsData').value, certsData: document.getElementById('certsData').value, ijazahData: JSON.stringify(ijazahArr), sertifikatData: JSON.stringify(sertifikatArr), ktpData: JSON.stringify(ktpArr), npwpData: JSON.stringify(npwpArr) };
     
@@ -466,16 +463,19 @@
       else if(type === 'npwp') { npwpCount++; prefix = `npwp-${npwpCount}`; containerId = 'npwpContainer'; } 
       const html = `<div class="dynamic-box" id="box-${prefix}" style="padding:10px; background:#fff;"><button type="button" class="btn-remove" onclick="removeElement('box-${prefix}')"><i class="fa-solid fa-trash"></i></button><input type="file" class="elegant-input form-control-sm" accept="image/*" onchange="handleLampiranBase64(event, 'img-${prefix}')"><img id="img-${prefix}" class="lampiran-data-${type} d-none mt-2 rounded shadow-sm" style="max-height: 80px; border: 1px solid #eaeaea;"></div>`; document.getElementById(containerId).insertAdjacentHTML('beforeend', html); 
   }
-  
   function handleLampiranBase64(event, imgId) { const file = event.target.files[0]; const imgEl = document.getElementById(imgId); if(!file) { imgEl.src = ""; imgEl.classList.add('d-none'); updatePreview(); return; } const reader = new FileReader(); reader.onload = function(e) { const img = new Image(); img.onload = function() { const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d'); let width = img.width; let height = img.height; const MAX_WIDTH = 800; const MAX_HEIGHT = 1000; if (width > height) { if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; } } else { if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; } } canvas.width = width; canvas.height = height; ctx.drawImage(img, 0, 0, width, height); const dataUrl = canvas.toDataURL('image/jpeg', 0.6); imgEl.src = dataUrl; imgEl.classList.remove('d-none'); updatePreview(); }; img.src = e.target.result; }; reader.readAsDataURL(file); }
   
+  // ==========================================
+  // PERBAIKAN: MEMBACA LINK GOOGLE DRIVE UNTUK DITAMPILKAN DI DASHBOARD (PREVIEW)
+  // ==========================================
   function rebuildGallery(type) { 
       let galleryId = `lampiran-${type}-gallery`; 
       let areaId = `lampiran-${type}-area`; 
       let imgClass = `lampiran-data-${type}`; 
       const gallery = document.getElementById(galleryId); gallery.innerHTML = ''; let hasImages = false; 
       document.querySelectorAll(`img.${imgClass}`).forEach(img => { 
-          if(img.src && img.src.startsWith('data:image')) { 
+          // Sekarang sistem akan mengizinkan format Base64 (upload baru) ATAU Link HTTP Google Drive (data yang diload)
+          if(img.src && (img.src.startsWith('data:image') || img.src.startsWith('http'))) { 
               hasImages = true; const newImg = document.createElement('img'); newImg.src = img.src; 
               newImg.setAttribute('width', '600'); newImg.style.width = '100%'; newImg.style.maxWidth = '600px'; newImg.style.marginBottom = '20px'; newImg.style.display = 'block'; newImg.style.marginLeft = 'auto'; newImg.style.marginRight = 'auto';
               gallery.appendChild(newImg); 
