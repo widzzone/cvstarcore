@@ -53,8 +53,7 @@
       #cvSection, .col-lg-7, .container-fluid { display: block !important; width: 100% !important; max-width: 100% !important; height: auto !important; overflow: visible !important; padding: 0 !important; margin: 0 !important; }
       #cv-document { position: relative !important; width: 100% !important; margin: 0 !important; padding: 0 !important; box-shadow: none !important; border: none !important; box-sizing: border-box !important; }
       
-      .section-title { page-break-after: avoid !important; break-after: avoid !important; }
-      .lampiran-title { page-break-after: avoid !important; break-after: avoid !important; }
+      .section-title, .lampiran-title { page-break-after: avoid !important; break-after: avoid !important; }
       .prevent-break { page-break-inside: auto !important; break-inside: auto !important; }
       table tr { page-break-inside: auto !important; break-inside: auto !important; }
       .cv-lampiran-section { page-break-before: always !important; }
@@ -64,7 +63,7 @@
 <body>
 
   <div id="loginPage" class="premium-login-wrapper">
-    <div class="logo-text-top">starcore<span class="logo-badge">.co</span><br><span style="font-size: 12px; color: #6c757d; font-weight: 500;">v11.0 Smart Memory Translation</span></div>
+    <div class="logo-text-top">starcore<span class="logo-badge">.co</span><br><span style="font-size: 12px; color: #6c757d; font-weight: 500;">v12.0 Complete Documents</span></div>
     <div class="login-card text-center">
       <h1 class="login-title">STARCORE</h1><div class="login-subtitle">Premium CV Builder Application</div><p class="login-desc">Welcome! Please login to your account.</p>
       <div class="mb-3"><label class="input-label">Username</label><input type="text" id="loginUsername" class="elegant-input" placeholder="Enter your Username" required></div>
@@ -98,6 +97,7 @@
       </div>
 
       <div id="cvSection" class="row">
+        <!-- FORM KIRI -->
         <div class="col-lg-5 mb-4" style="height: 83vh; overflow-y: auto; padding-right: 15px;">
           <div class="form-card">
             <h4 id="cvTitleHeader" class="mb-4 fw-bold" style="color: #1b7a43;">Data CV Profesional</h4>
@@ -106,6 +106,10 @@
               <input type="hidden" name="photoBase64" id="photoBase64">
               <input type="hidden" name="ijazahData" id="ijazahData">
               <input type="hidden" name="sertifikatData" id="sertifikatData">
+              <!-- HIDDEN INPUT KTP & NPWP -->
+              <input type="hidden" name="ktpData" id="ktpData">
+              <input type="hidden" name="npwpData" id="npwpData">
+              
               <input type="hidden" name="certsData" id="certsData">
               <input type="hidden" name="workExpsData" id="workExpsData">
               <input type="hidden" name="expsData" id="expsData">
@@ -120,11 +124,21 @@
               <div class="d-flex justify-content-between align-items-center mb-3 mt-4"><h6 class="fw-bold m-0 text-warning text-dark">Sertifikat Profesi/Kompetensi</h6><button type="button" class="btn btn-sm btn-outline-warning text-dark" onclick="addCert()"><i class="fa-solid fa-plus"></i> Tambah</button></div><div id="certContainer"></div>
 
               <div class="p-4 mt-4" style="background: #f8fafc; border-radius: 12px; border: 1px dashed #cbd5e1;">
-                <h6 class="fw-bold text-secondary mb-3"><i class="fa-solid fa-paperclip me-1"></i>Lampiran Gambar</h6>
+                <h6 class="fw-bold text-secondary mb-3"><i class="fa-solid fa-paperclip me-1"></i>Lampiran Dokumen Tambahan</h6>
+                
                 <div class="d-flex justify-content-between align-items-center mb-2"><span class="fw-semibold text-dark" style="font-size:14px;">Ijazah</span><button type="button" class="btn btn-sm btn-light border" onclick="addLampiran('ijazah')"><i class="fa-solid fa-plus text-muted"></i></button></div><div id="ijazahContainer"></div>
                 <hr class="my-3 border-secondary opacity-25">
+                
                 <div class="d-flex justify-content-between align-items-center mb-2"><span class="fw-semibold text-dark" style="font-size:14px;">Diagram/Sertifikat</span><button type="button" class="btn btn-sm btn-light border" onclick="addLampiran('sertifikat')"><i class="fa-solid fa-plus text-muted"></i></button></div><div id="lampSertifikatContainer"></div>
+                <hr class="my-3 border-secondary opacity-25">
+
+                <!-- BAGIAN KTP & NPWP BARU -->
+                <div class="d-flex justify-content-between align-items-center mb-2"><span class="fw-semibold text-dark" style="font-size:14px;">KTP</span><button type="button" class="btn btn-sm btn-light border" onclick="addLampiran('ktp')"><i class="fa-solid fa-plus text-muted"></i></button></div><div id="ktpContainer"></div>
+                <hr class="my-3 border-secondary opacity-25">
+                
+                <div class="d-flex justify-content-between align-items-center mb-2"><span class="fw-semibold text-dark" style="font-size:14px;">NPWP</span><button type="button" class="btn btn-sm btn-light border" onclick="addLampiran('npwp')"><i class="fa-solid fa-plus text-muted"></i></button></div><div id="npwpContainer"></div>
               </div>
+
               <button type="submit" class="btn btn-primary w-100 mt-4 shadow-sm" id="btnSubmit"><i class="fa-solid fa-cloud-arrow-up me-1"></i> Simpan Data CV & Lampiran</button>
               
               <button type="button" class="btn btn-light border w-100 mt-2 fw-semibold" onclick="translateForm()" id="btnTranslate"><i class="fa-solid fa-language text-primary me-1"></i> Translate to English</button>
@@ -132,6 +146,7 @@
           </div>
         </div>
 
+        <!-- PREVIEW KANAN -->
         <div class="col-lg-7" style="height: 83vh; overflow-y: auto;">
           <div class="d-flex justify-content-between align-items-center mb-3 sticky-top bg-white p-3 rounded shadow-sm border">
             <h5 class="fw-bold m-0" style="color: #1b7a43;">Preview Dokumen CV</h5>
@@ -170,6 +185,7 @@
             <h4 class="section-title" style="font-size: 15px; margin: 20px 0 10px 0; font-weight: bold;" id="lbl-cert">Sertifikat Profesi/Kompetensi</h4>
             <div id="prev-certs"><span style="color:#ccc;">-</span></div>
             
+            <!-- LAMPIRAN AREA -->
             <div id="lampiran-ijazah-area" style="display: none;" class="cv-lampiran-section">
                 <br clear="all" style="page-break-before:always; mso-break-type:page-break" />
                 <h3 class="lampiran-title" id="lbl-lamp-ijazah" style="text-align: center; margin: 20px 0 15px 0; font-weight: bold; font-size: 16px;">LAMPIRAN IJAZAH</h3>
@@ -181,6 +197,19 @@
                 <h3 class="lampiran-title" id="lbl-lamp-cert" style="text-align: center; margin: 20px 0 15px 0; font-weight: bold; font-size: 16px;">LAMPIRAN SERTIFIKAT</h3>
                 <div id="lampiran-sertifikat-gallery" style="text-align: center;"></div>
             </div>
+
+            <!-- AREA LAMPIRAN KTP & NPWP BARU -->
+            <div id="lampiran-ktp-area" style="display: none;" class="cv-lampiran-section">
+                <br clear="all" style="page-break-before:always; mso-break-type:page-break" />
+                <h3 class="lampiran-title" id="lbl-lamp-ktp" style="text-align: center; margin: 20px 0 15px 0; font-weight: bold; font-size: 16px;">LAMPIRAN KTP</h3>
+                <div id="lampiran-ktp-gallery" style="text-align: center;"></div>
+            </div>
+
+            <div id="lampiran-npwp-area" style="display: none;" class="cv-lampiran-section">
+                <br clear="all" style="page-break-before:always; mso-break-type:page-break" />
+                <h3 class="lampiran-title" id="lbl-lamp-npwp" style="text-align: center; margin: 20px 0 15px 0; font-weight: bold; font-size: 16px;">LAMPIRAN NPWP</h3>
+                <div id="lampiran-npwp-gallery" style="text-align: center;"></div>
+            </div>
           </div>
         </div>
       </div> 
@@ -191,15 +220,15 @@
   // ==========================================
   // PENGATURAN API GOOGLE APPS SCRIPT
   // ==========================================
-  const API_URL = "https://script.google.com/macros/s/AKfycbxtIHHt7p_UrgL4_2Hj7coMZsKO9mWZW1CtZoPQAEJgGlrCEkrT1r5yNUJQZufnGu74/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbwsuM-khALY5dCZWwnvzFhFjrUlfasHqyiP-goLBsY5zXe8g3sCy5qMyNH41_0ZbHiK/exec";
   
   const Toast = Swal.mixin({ toast: true, position: 'top-end', showConfirmButton: false, timer: 3000, timerProgressBar: true });
   function showElegantAlert(type, title, text) { Swal.fire({ icon: type, title: title, text: text, confirmButtonColor: '#15a362', confirmButtonText: 'Mengerti' }); }
 
   let currentUser = ""; let currentRole = ""; let viewingUser = ""; 
-  let certCount = 0; let workExpCount = 0; let projExpCount = 0; let ijazahCount = 0; let lampSertCount = 0;
+  let certCount = 0; let workExpCount = 0; let projExpCount = 0; 
+  let ijazahCount = 0; let lampSertCount = 0; let ktpCount = 0; let npwpCount = 0; // Tambahan counter KTP NPWP
   
-  // VARIABEL PENYIMPAN TEKS ASLI BAHASA INDONESIA
   let isEnglish = false; 
   let originalCVDataCache = null; 
 
@@ -275,7 +304,9 @@
     if(!username) return; 
     document.getElementById('name').value = "Menarik data via API...";
     document.getElementById('pasFotoInput').value = ""; document.getElementById('prev-photo').src = ""; document.getElementById('prev-photo').style.display = 'none'; document.getElementById('photoPlaceholder').style.display = 'block'; document.getElementById('photoBase64').value = "";
-    document.getElementById('ijazahContainer').innerHTML = ''; document.getElementById('lampSertifikatContainer').innerHTML = ''; ijazahCount = 0; lampSertCount = 0;
+    document.getElementById('ijazahContainer').innerHTML = ''; document.getElementById('lampSertifikatContainer').innerHTML = ''; 
+    document.getElementById('ktpContainer').innerHTML = ''; document.getElementById('npwpContainer').innerHTML = ''; 
+    ijazahCount = 0; lampSertCount = 0; ktpCount = 0; npwpCount = 0;
     
     try {
       const res = await fetchAPI('getUserData', { username: username });
@@ -292,131 +323,92 @@
         if (res.ijazah && res.ijazah.length > 0) { res.ijazah.forEach(base64 => { addLampiran('ijazah'); const last = document.getElementById(`img-ijazah-${ijazahCount}`); last.src = base64; last.classList.remove('d-none'); }); } else { addLampiran('ijazah'); }
         if (res.sertifikat && res.sertifikat.length > 0) { res.sertifikat.forEach(base64 => { addLampiran('sertifikat'); const last = document.getElementById(`img-lampsert-${lampSertCount}`); last.src = base64; last.classList.remove('d-none'); }); } else { addLampiran('sertifikat'); }
         
+        // Load KTP dan NPWP
+        if (res.ktp && res.ktp.length > 0) { res.ktp.forEach(base64 => { addLampiran('ktp'); const last = document.getElementById(`img-ktp-${ktpCount}`); last.src = base64; last.classList.remove('d-none'); }); } else { addLampiran('ktp'); }
+        if (res.npwp && res.npwp.length > 0) { res.npwp.forEach(base64 => { addLampiran('npwp'); const last = document.getElementById(`img-npwp-${npwpCount}`); last.src = base64; last.classList.remove('d-none'); }); } else { addLampiran('npwp'); }
+        
         document.getElementById('workExpContainer').innerHTML = ''; workExpCount = 0; if (res.workExps && res.workExps.length > 0) { res.workExps.forEach(w => { addWorkExp(); const boxes = document.querySelectorAll('#workExpContainer .dynamic-box'); const box = boxes[boxes.length - 1]; box.querySelector('.work-period').value = w.period || ""; box.querySelector('.work-company').value = w.company || ""; box.querySelector('.work-role').value = w.role || ""; box.querySelector('.work-desc').value = w.desc || ""; }); } else { addWorkExp(); }
         document.getElementById('projExpContainer').innerHTML = ''; projExpCount = 0; if (res.projExps && res.projExps.length > 0) { res.projExps.forEach(p => { addProjExp(); const boxes = document.querySelectorAll('#projExpContainer .dynamic-box'); const box = boxes[boxes.length - 1]; box.querySelector('.proj-year').value = p.year || ""; box.querySelector('.proj-client').value = p.client || ""; box.querySelector('.proj-role').value = p.role || ""; box.querySelector('.proj-desc').value = p.desc || ""; }); } else { addProjExp(); }
         document.getElementById('certContainer').innerHTML = ''; certCount = 0; if (res.certs && res.certs.length > 0) { res.certs.forEach(c => { addCert(); const boxes = document.querySelectorAll('#certContainer .dynamic-box'); const box = boxes[boxes.length - 1]; box.querySelector('.cert-no').value = c.no || ""; box.querySelector('.cert-field').value = c.field || ""; box.querySelector('.cert-date').value = c.date || ""; box.querySelector('.cert-expiry').value = c.expiry || ""; }); } else { addCert(); }
         
-        // Reset status translate
-        isEnglish = false;
-        originalCVDataCache = null;
-        document.getElementById('btnTranslate').innerHTML = '<i class="fa-solid fa-language text-primary me-1"></i> Translate to English';
-        
+        isEnglish = false; originalCVDataCache = null; document.getElementById('btnTranslate').innerHTML = '<i class="fa-solid fa-language text-primary me-1"></i> Translate to English';
         updatePreview(); 
-      } else { document.getElementById('name').value = ""; document.getElementById('workExpContainer').innerHTML = ''; workExpCount = 0; addWorkExp(); document.getElementById('projExpContainer').innerHTML = ''; projExpCount = 0; addProjExp(); document.getElementById('certContainer').innerHTML = ''; certCount = 0; addCert(); addLampiran('ijazah'); addLampiran('sertifikat'); updatePreview(); }
-    } catch(e) { document.getElementById('name').value = ""; showElegantAlert('error', 'Gagal', 'Terjadi kesalahan jaringan.'); addLampiran('ijazah'); addLampiran('sertifikat'); updatePreview(); }
+      } else { 
+          document.getElementById('name').value = ""; document.getElementById('workExpContainer').innerHTML = ''; workExpCount = 0; addWorkExp(); document.getElementById('projExpContainer').innerHTML = ''; projExpCount = 0; addProjExp(); document.getElementById('certContainer').innerHTML = ''; certCount = 0; addCert(); 
+          addLampiran('ijazah'); addLampiran('sertifikat'); addLampiran('ktp'); addLampiran('npwp'); updatePreview(); 
+      }
+    } catch(e) { 
+        document.getElementById('name').value = ""; showElegantAlert('error', 'Gagal', 'Terjadi kesalahan jaringan.'); 
+        addLampiran('ijazah'); addLampiran('sertifikat'); addLampiran('ktp'); addLampiran('npwp'); updatePreview(); 
+    }
   }
 
   async function submitData() {
     const btn = document.getElementById('btnSubmit'); const originalHTML = btn.innerHTML;
     if (!currentUser) { showElegantAlert('error', 'Sesi Habis', 'Silakan login kembali.'); return; }
-    
-    // Cegah simpan jika dalam keadaan bahasa inggris agar database tidak berubah bahasa
-    if (isEnglish) {
-        showElegantAlert('warning', 'Peringatan!', 'Silakan kembalikan CV ke Teks Asli (Indonesia) terlebih dahulu sebelum menekan tombol Simpan.');
-        return;
-    }
+    if (isEnglish) { showElegantAlert('warning', 'Peringatan!', 'Silakan kembalikan CV ke Teks Asli (Indonesia) terlebih dahulu sebelum menekan tombol Simpan.'); return; }
 
     let saveTarget = viewingUser ? viewingUser : currentUser;
     let ijazahArr = []; document.querySelectorAll('.lampiran-data-ijazah').forEach(img => { if(img.src.startsWith('data:image')) ijazahArr.push(img.src); }); 
     let sertifikatArr = []; document.querySelectorAll('.lampiran-data-sertifikat').forEach(img => { if(img.src.startsWith('data:image')) sertifikatArr.push(img.src); }); 
-    let payload = { username: saveTarget, name: document.getElementById('name').value, roleTitle: document.getElementById('roleTitle').value, education: document.getElementById('education').value, photoBase64: document.getElementById('photoBase64').value, workExpsData: document.getElementById('workExpsData').value, expsData: document.getElementById('expsData').value, certsData: document.getElementById('certsData').value, ijazahData: JSON.stringify(ijazahArr), sertifikatData: JSON.stringify(sertifikatArr) };
+    let ktpArr = []; document.querySelectorAll('.lampiran-data-ktp').forEach(img => { if(img.src.startsWith('data:image')) ktpArr.push(img.src); }); 
+    let npwpArr = []; document.querySelectorAll('.lampiran-data-npwp').forEach(img => { if(img.src.startsWith('data:image')) npwpArr.push(img.src); }); 
+    
+    let payload = { username: saveTarget, name: document.getElementById('name').value, roleTitle: document.getElementById('roleTitle').value, education: document.getElementById('education').value, photoBase64: document.getElementById('photoBase64').value, workExpsData: document.getElementById('workExpsData').value, expsData: document.getElementById('expsData').value, certsData: document.getElementById('certsData').value, ijazahData: JSON.stringify(ijazahArr), sertifikatData: JSON.stringify(sertifikatArr), ktpData: JSON.stringify(ktpArr), npwpData: JSON.stringify(npwpArr) };
+    
     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> Menyimpan API...'; btn.disabled = true;
     try { const res = await fetchAPI('saveData', payload); if(res.status === 'error') { showElegantAlert('error', 'Gagal', res.message); } else { Toast.fire({ icon: 'success', title: `Data ${saveTarget} berhasil disimpan!` }); } } catch(e) { showElegantAlert('error', 'Terputus', 'Server tidak merespons.'); } finally { btn.innerHTML = originalHTML; btn.disabled = false; }
   }
 
-  // ==========================================
-  // FITUR SMART TRANSLATE & CACHE RESTORE
-  // ==========================================
   async function translateForm() {
     const btn = document.getElementById('btnTranslate');
     const originalHTML = btn.innerHTML;
     
-    // JIKA SAAT INI BAHASA INGGRIS, RESTORE KE BAHASA INDONESIA DARI CACHE (TIDAK PAKAI API)
     if (isEnglish) {
         btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> Mengembalikan Teks Asli...';
         btn.disabled = true;
-        
         setTimeout(() => {
             if (originalCVDataCache) {
                 document.getElementById('roleTitle').value = originalCVDataCache.roleTitle || "";
                 document.getElementById('education').value = originalCVDataCache.education || "";
-
                 document.getElementById('workExpContainer').innerHTML = ''; workExpCount = 0;
                 if(originalCVDataCache.workExps.length > 0) { originalCVDataCache.workExps.forEach(w => { addWorkExp(); const box = document.querySelectorAll('#workExpContainer .dynamic-box')[document.querySelectorAll('#workExpContainer .dynamic-box').length - 1]; box.querySelector('.work-period').value = w.period; box.querySelector('.work-company').value = w.company; box.querySelector('.work-role').value = w.role; box.querySelector('.work-desc').value = w.desc; }); } else { addWorkExp(); }
-
                 document.getElementById('projExpContainer').innerHTML = ''; projExpCount = 0;
                 if(originalCVDataCache.projExps.length > 0) { originalCVDataCache.projExps.forEach(p => { addProjExp(); const box = document.querySelectorAll('#projExpContainer .dynamic-box')[document.querySelectorAll('#projExpContainer .dynamic-box').length - 1]; box.querySelector('.proj-year').value = p.year; box.querySelector('.proj-client').value = p.client; box.querySelector('.proj-role').value = p.role; box.querySelector('.proj-desc').value = p.desc; }); } else { addProjExp(); }
-
                 document.getElementById('certContainer').innerHTML = ''; certCount = 0;
                 if(originalCVDataCache.certs.length > 0) { originalCVDataCache.certs.forEach(c => { addCert(); const box = document.querySelectorAll('#certContainer .dynamic-box')[document.querySelectorAll('#certContainer .dynamic-box').length - 1]; box.querySelector('.cert-no').value = c.no; box.querySelector('.cert-field').value = c.field; box.querySelector('.cert-date').value = c.date; box.querySelector('.cert-expiry').value = c.expiry; }); } else { addCert(); }
             }
-            
-            isEnglish = false;
-            updatePreview();
+            isEnglish = false; updatePreview();
             btn.innerHTML = '<i class="fa-solid fa-language text-primary me-1"></i> Translate to English';
-            btn.disabled = false;
-            Toast.fire({ icon: 'success', title: 'Dikembalikan ke Teks Asli (Indonesia)!' });
-        }, 500);
-        return;
+            btn.disabled = false; Toast.fire({ icon: 'success', title: 'Dikembalikan ke Teks Asli (Indonesia)!' });
+        }, 500); return;
     }
 
-    // JIKA SAAT INI BAHASA INDONESIA, TRANSLATE KE INGGRIS VIA API
-    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> Sedang Menerjemahkan (Tunggu Sebentar)...';
-    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> Sedang Menerjemahkan (Tunggu Sebentar)...'; btn.disabled = true;
 
-    let workData = [];
-    document.querySelectorAll('#workExpContainer .dynamic-box').forEach(box => { workData.push({ period: box.querySelector('.work-period').value, company: box.querySelector('.work-company').value, role: box.querySelector('.work-role').value, desc: box.querySelector('.work-desc').value }); });
-    
-    let projData = [];
-    document.querySelectorAll('#projExpContainer .dynamic-box').forEach(box => { projData.push({ year: box.querySelector('.proj-year').value, client: box.querySelector('.proj-client').value, role: box.querySelector('.proj-role').value, desc: box.querySelector('.proj-desc').value }); });
-    
-    let certsData = [];
-    document.querySelectorAll('#certContainer .dynamic-box').forEach(box => { certsData.push({ no: box.querySelector('.cert-no').value, field: box.querySelector('.cert-field').value, date: box.querySelector('.cert-date').value, expiry: box.querySelector('.cert-expiry').value }); });
+    let workData = []; document.querySelectorAll('#workExpContainer .dynamic-box').forEach(box => { workData.push({ period: box.querySelector('.work-period').value, company: box.querySelector('.work-company').value, role: box.querySelector('.work-role').value, desc: box.querySelector('.work-desc').value }); });
+    let projData = []; document.querySelectorAll('#projExpContainer .dynamic-box').forEach(box => { projData.push({ year: box.querySelector('.proj-year').value, client: box.querySelector('.proj-client').value, role: box.querySelector('.proj-role').value, desc: box.querySelector('.proj-desc').value }); });
+    let certsData = []; document.querySelectorAll('#certContainer .dynamic-box').forEach(box => { certsData.push({ no: box.querySelector('.cert-no').value, field: box.querySelector('.cert-field').value, date: box.querySelector('.cert-date').value, expiry: box.querySelector('.cert-expiry').value }); });
 
-    let dataToTranslate = {
-        roleTitle: document.getElementById('roleTitle').value,
-        education: document.getElementById('education').value,
-        workExps: workData,
-        projExps: projData,
-        certs: certsData
-    };
+    let dataToTranslate = { roleTitle: document.getElementById('roleTitle').value, education: document.getElementById('education').value, workExps: workData, projExps: projData, certs: certsData };
 
-    // SIMPAN TEKS INDONESIA KE MEMORI SEBELUM DITERJEMAHKAN
     originalCVDataCache = JSON.parse(JSON.stringify(dataToTranslate));
     let isSuccess = false; 
 
     try {
       const res = await fetchAPI('translateData', { dataToTranslate: dataToTranslate, targetLang: 'en' });
       if (res.status === 'success') {
-          isSuccess = true;
-          isEnglish = true; 
-          const translated = res.data;
-
+          isSuccess = true; isEnglish = true; const translated = res.data;
           document.getElementById('roleTitle').value = translated.roleTitle || "";
           document.getElementById('education').value = translated.education || "";
-
-          document.getElementById('workExpContainer').innerHTML = ''; workExpCount = 0;
-          if(translated.workExps.length > 0) { translated.workExps.forEach(w => { addWorkExp(); const box = document.querySelectorAll('#workExpContainer .dynamic-box')[document.querySelectorAll('#workExpContainer .dynamic-box').length - 1]; box.querySelector('.work-period').value = w.period; box.querySelector('.work-company').value = w.company; box.querySelector('.work-role').value = w.role; box.querySelector('.work-desc').value = w.desc; }); } else { addWorkExp(); }
-
-          document.getElementById('projExpContainer').innerHTML = ''; projExpCount = 0;
-          if(translated.projExps.length > 0) { translated.projExps.forEach(p => { addProjExp(); const box = document.querySelectorAll('#projExpContainer .dynamic-box')[document.querySelectorAll('#projExpContainer .dynamic-box').length - 1]; box.querySelector('.proj-year').value = p.year; box.querySelector('.proj-client').value = p.client; box.querySelector('.proj-role').value = p.role; box.querySelector('.proj-desc').value = p.desc; }); } else { addProjExp(); }
-
-          document.getElementById('certContainer').innerHTML = ''; certCount = 0;
-          if(translated.certs.length > 0) { translated.certs.forEach(c => { addCert(); const box = document.querySelectorAll('#certContainer .dynamic-box')[document.querySelectorAll('#certContainer .dynamic-box').length - 1]; box.querySelector('.cert-no').value = c.no; box.querySelector('.cert-field').value = c.field; box.querySelector('.cert-date').value = c.date; box.querySelector('.cert-expiry').value = c.expiry; }); } else { addCert(); }
-
+          document.getElementById('workExpContainer').innerHTML = ''; workExpCount = 0; if(translated.workExps.length > 0) { translated.workExps.forEach(w => { addWorkExp(); const box = document.querySelectorAll('#workExpContainer .dynamic-box')[document.querySelectorAll('#workExpContainer .dynamic-box').length - 1]; box.querySelector('.work-period').value = w.period; box.querySelector('.work-company').value = w.company; box.querySelector('.work-role').value = w.role; box.querySelector('.work-desc').value = w.desc; }); } else { addWorkExp(); }
+          document.getElementById('projExpContainer').innerHTML = ''; projExpCount = 0; if(translated.projExps.length > 0) { translated.projExps.forEach(p => { addProjExp(); const box = document.querySelectorAll('#projExpContainer .dynamic-box')[document.querySelectorAll('#projExpContainer .dynamic-box').length - 1]; box.querySelector('.proj-year').value = p.year; box.querySelector('.proj-client').value = p.client; box.querySelector('.proj-role').value = p.role; box.querySelector('.proj-desc').value = p.desc; }); } else { addProjExp(); }
+          document.getElementById('certContainer').innerHTML = ''; certCount = 0; if(translated.certs.length > 0) { translated.certs.forEach(c => { addCert(); const box = document.querySelectorAll('#certContainer .dynamic-box')[document.querySelectorAll('#certContainer .dynamic-box').length - 1]; box.querySelector('.cert-no').value = c.no; box.querySelector('.cert-field').value = c.field; box.querySelector('.cert-date').value = c.date; box.querySelector('.cert-expiry').value = c.expiry; }); } else { addCert(); }
           updatePreview(); 
-
           btn.innerHTML = '<i class="fa-solid fa-clock-rotate-left text-danger me-1"></i> Kembali ke Teks Asli (Indonesia)';
           Toast.fire({ icon: 'success', title: 'Terjemahan ke Inggris Selesai!' });
-      } else {
-          showElegantAlert('error', 'Gagal dari Server', res.message || 'Terjadi kesalahan saat menerjemahkan.');
-      }
-    } catch (e) {
-        showElegantAlert('error', 'Error Jaringan', 'Koneksi ke API Terputus. Pastikan Code.gs sudah di Deploy ulang.');
-    } finally {
-        btn.disabled = false;
-        if(!isSuccess) { btn.innerHTML = originalHTML; }
-    }
+      } else { showElegantAlert('error', 'Gagal dari Server', res.message || 'Terjadi kesalahan saat menerjemahkan.'); }
+    } catch (e) { showElegantAlert('error', 'Error Jaringan', 'Koneksi ke API Terputus. Pastikan Code.gs sudah di Deploy ulang.'); } finally { btn.disabled = false; if(!isSuccess) { btn.innerHTML = originalHTML; } }
   }
 
   function logout() { 
@@ -425,10 +417,19 @@
         currentUser = ""; currentRole = ""; viewingUser = ""; document.getElementById('cvTitleHeader').innerHTML = `Data CV Profesional`;
         document.getElementById("dashboardPage").classList.add("d-none"); document.getElementById("loginPage").classList.remove("d-none"); document.getElementById("loginMsg").innerText = ""; 
         document.getElementById('cvForm').reset(); document.getElementById('prev-photo').src = ""; document.getElementById('prev-photo').style.display = 'none'; document.getElementById('photoPlaceholder').style.display = 'block'; document.getElementById('photoBase64').value = "";
-        document.getElementById('workExpContainer').innerHTML = ''; document.getElementById('projExpContainer').innerHTML = ''; document.getElementById('certContainer').innerHTML = ''; document.getElementById('ijazahContainer').innerHTML = ''; document.getElementById('lampSertifikatContainer').innerHTML = ''; 
-        workExpCount = 0; projExpCount = 0; certCount = 0; ijazahCount = 0; lampSertCount = 0;
+        
+        document.getElementById('workExpContainer').innerHTML = ''; document.getElementById('projExpContainer').innerHTML = ''; document.getElementById('certContainer').innerHTML = ''; 
+        document.getElementById('ijazahContainer').innerHTML = ''; document.getElementById('lampSertifikatContainer').innerHTML = ''; 
+        document.getElementById('ktpContainer').innerHTML = ''; document.getElementById('npwpContainer').innerHTML = ''; 
+        
+        workExpCount = 0; projExpCount = 0; certCount = 0; ijazahCount = 0; lampSertCount = 0; ktpCount = 0; npwpCount = 0;
+        
         document.getElementById('prev-name').innerText = "Nama Lengkap"; document.getElementById('prev-role').innerText = "Posisi"; document.getElementById('prev-edu').innerText = "-"; document.getElementById('prev-work-exps').innerHTML = '<span style="color:#ccc;">-</span>'; document.getElementById('prev-proj-exps').innerHTML = '<span style="color:#ccc;">-</span>'; document.getElementById('prev-certs').innerHTML = '<span style="color:#ccc;">-</span>';
-        document.getElementById('lampiran-ijazah-gallery').innerHTML = ''; document.getElementById('lampiran-ijazah-area').style.display = 'none'; document.getElementById('lampiran-sertifikat-gallery').innerHTML = ''; document.getElementById('lampiran-sertifikat-area').style.display = 'none';
+        
+        document.getElementById('lampiran-ijazah-gallery').innerHTML = ''; document.getElementById('lampiran-ijazah-area').style.display = 'none'; 
+        document.getElementById('lampiran-sertifikat-gallery').innerHTML = ''; document.getElementById('lampiran-sertifikat-area').style.display = 'none';
+        document.getElementById('lampiran-ktp-gallery').innerHTML = ''; document.getElementById('lampiran-ktp-area').style.display = 'none';
+        document.getElementById('lampiran-npwp-gallery').innerHTML = ''; document.getElementById('lampiran-npwp-area').style.display = 'none';
         
         isEnglish = false; originalCVDataCache = null; document.getElementById('btnTranslate').innerHTML = '<i class="fa-solid fa-language text-primary me-1"></i> Translate to English';
         
@@ -457,13 +458,21 @@
       }; reader.readAsDataURL(file); 
   }
   
-  function addLampiran(type) { let containerId, prefix; if(type === 'ijazah') { ijazahCount++; prefix = `ijazah-${ijazahCount}`; containerId = 'ijazahContainer'; } else { lampSertCount++; prefix = `lampsert-${lampSertCount}`; containerId = 'lampSertifikatContainer'; } const html = `<div class="dynamic-box" id="box-${prefix}" style="padding:10px; background:#fff;"><button type="button" class="btn-remove" onclick="removeElement('box-${prefix}')"><i class="fa-solid fa-trash"></i></button><input type="file" class="elegant-input form-control-sm" accept="image/*" onchange="handleLampiranBase64(event, 'img-${prefix}')"><img id="img-${prefix}" class="lampiran-data-${type} d-none mt-2 rounded shadow-sm" style="max-height: 80px; border: 1px solid #eaeaea;"></div>`; document.getElementById(containerId).insertAdjacentHTML('beforeend', html); }
+  function addLampiran(type) { 
+      let containerId, prefix; 
+      if(type === 'ijazah') { ijazahCount++; prefix = `ijazah-${ijazahCount}`; containerId = 'ijazahContainer'; } 
+      else if(type === 'sertifikat') { lampSertCount++; prefix = `lampsert-${lampSertCount}`; containerId = 'lampSertifikatContainer'; }
+      else if(type === 'ktp') { ktpCount++; prefix = `ktp-${ktpCount}`; containerId = 'ktpContainer'; } 
+      else if(type === 'npwp') { npwpCount++; prefix = `npwp-${npwpCount}`; containerId = 'npwpContainer'; } 
+      const html = `<div class="dynamic-box" id="box-${prefix}" style="padding:10px; background:#fff;"><button type="button" class="btn-remove" onclick="removeElement('box-${prefix}')"><i class="fa-solid fa-trash"></i></button><input type="file" class="elegant-input form-control-sm" accept="image/*" onchange="handleLampiranBase64(event, 'img-${prefix}')"><img id="img-${prefix}" class="lampiran-data-${type} d-none mt-2 rounded shadow-sm" style="max-height: 80px; border: 1px solid #eaeaea;"></div>`; document.getElementById(containerId).insertAdjacentHTML('beforeend', html); 
+  }
+  
   function handleLampiranBase64(event, imgId) { const file = event.target.files[0]; const imgEl = document.getElementById(imgId); if(!file) { imgEl.src = ""; imgEl.classList.add('d-none'); updatePreview(); return; } const reader = new FileReader(); reader.onload = function(e) { const img = new Image(); img.onload = function() { const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d'); let width = img.width; let height = img.height; const MAX_WIDTH = 800; const MAX_HEIGHT = 1000; if (width > height) { if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; } } else { if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; } } canvas.width = width; canvas.height = height; ctx.drawImage(img, 0, 0, width, height); const dataUrl = canvas.toDataURL('image/jpeg', 0.6); imgEl.src = dataUrl; imgEl.classList.remove('d-none'); updatePreview(); }; img.src = e.target.result; }; reader.readAsDataURL(file); }
   
   function rebuildGallery(type) { 
-      let galleryId = type === 'ijazah' ? 'lampiran-ijazah-gallery' : 'lampiran-sertifikat-gallery'; 
-      let areaId = type === 'ijazah' ? 'lampiran-ijazah-area' : 'lampiran-sertifikat-area'; 
-      let imgClass = type === 'ijazah' ? 'lampiran-data-ijazah' : 'lampiran-data-sertifikat'; 
+      let galleryId = `lampiran-${type}-gallery`; 
+      let areaId = `lampiran-${type}-area`; 
+      let imgClass = `lampiran-data-${type}`; 
       const gallery = document.getElementById(galleryId); gallery.innerHTML = ''; let hasImages = false; 
       document.querySelectorAll(`img.${imgClass}`).forEach(img => { 
           if(img.src && img.src.startsWith('data:image')) { 
@@ -486,8 +495,11 @@
     document.getElementById('lbl-work').innerText = isEnglish ? "Work Experience" : "Pengalaman Kerja";
     document.getElementById('lbl-proj').innerText = isEnglish ? "Project Experience" : "Pengalaman Project";
     document.getElementById('lbl-cert').innerText = isEnglish ? "Professional Certification" : "Sertifikat Profesi/Kompetensi";
+    
     document.getElementById('lbl-lamp-ijazah').innerText = isEnglish ? "DEGREE ATTACHMENT" : "LAMPIRAN IJAZAH";
     document.getElementById('lbl-lamp-cert').innerText = isEnglish ? "CERTIFICATION ATTACHMENT" : "LAMPIRAN SERTIFIKAT";
+    document.getElementById('lbl-lamp-ktp').innerText = isEnglish ? "ID CARD ATTACHMENT" : "LAMPIRAN KTP";
+    document.getElementById('lbl-lamp-npwp').innerText = isEnglish ? "TAX ID ATTACHMENT" : "LAMPIRAN NPWP";
 
     const t_period = isEnglish ? "Period" : "Periode";
     const t_company = isEnglish ? "Company" : "Perusahaan";
@@ -568,7 +580,10 @@
     });
     document.getElementById('prev-certs').innerHTML = certsHTML || '<span style="color:#ccc;">-</span>'; document.getElementById('certsData').value = JSON.stringify(certsData);
 
-    rebuildGallery('ijazah'); rebuildGallery('sertifikat');
+    rebuildGallery('ijazah'); 
+    rebuildGallery('sertifikat');
+    rebuildGallery('ktp'); 
+    rebuildGallery('npwp');
   }
 
   function downloadPDF() {
