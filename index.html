@@ -58,7 +58,7 @@
 <body>
 
   <div id="loginPage" class="premium-login-wrapper">
-    <div class="logo-text-top">starcore<span class="logo-badge">.co</span><br><span style="font-size: 12px; color: #6c757d; font-weight: 500;">v14.0 Robust Save Edition</span></div>
+    <div class="logo-text-top">starcore<span class="logo-badge">.co</span><br><span style="font-size: 12px; color: #6c757d; font-weight: 500;">v15.0 Universal Viewer Edition</span></div>
     <div class="login-card text-center">
       <h1 class="login-title">STARCORE</h1><div class="login-subtitle">Premium CV Builder Application</div><p class="login-desc">Welcome! Please login to your account.</p>
       <div class="mb-3"><label class="input-label">Username</label><input type="text" id="loginUsername" class="elegant-input" placeholder="Enter your Username" required></div>
@@ -182,7 +182,7 @@
   // ==========================================
   // PENGATURAN API GOOGLE APPS SCRIPT
   // ==========================================
-  const API_URL = "https://script.google.com/macros/s/AKfycbwjWS6hnJLqw1JkWrwBxn4MpTfweT8eHK-amXezHwmsqLDOTDxCp_HWMIi404a8-pOc/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbz7N2MyRATKlySC6us4iYM1rP7GwSMBvaTicdqY8sT9196YxxcBbzadyY82scOoDCyz/exec";
   
   const Toast = Swal.mixin({ toast: true, position: 'top-end', showConfirmButton: false, timer: 3000, timerProgressBar: true });
   function showElegantAlert(type, title, text) { Swal.fire({ icon: type, title: title, text: text, confirmButtonColor: '#15a362', confirmButtonText: 'Mengerti' }); }
@@ -284,7 +284,7 @@
   }
 
   // ==========================================
-  // PERBAIKAN: MENANGKAP URL/GAMBAR DENGAN AMAN
+  // PERBAIKAN: IZINKAN SEMUA JENIS HTTP TERBACA SAAT SIMPAN
   // ==========================================
   async function submitData() {
     const btn = document.getElementById('btnSubmit'); const originalHTML = btn.innerHTML;
@@ -293,11 +293,10 @@
 
     let saveTarget = viewingUser ? viewingUser : currentUser;
     
-    // PERBAIKAN BUG: Gunakan properti .src asli milik object Image JS (bukan getAttribute)
-    let ijazahArr = []; document.querySelectorAll('.lampiran-data-ijazah').forEach(img => { let src = img.src; if(src && (src.startsWith('data:image') || src.includes('drive.google.com'))) ijazahArr.push(src); }); 
-    let sertifikatArr = []; document.querySelectorAll('.lampiran-data-sertifikat').forEach(img => { let src = img.src; if(src && (src.startsWith('data:image') || src.includes('drive.google.com'))) sertifikatArr.push(src); }); 
-    let ktpArr = []; document.querySelectorAll('.lampiran-data-ktp').forEach(img => { let src = img.src; if(src && (src.startsWith('data:image') || src.includes('drive.google.com'))) ktpArr.push(src); }); 
-    let npwpArr = []; document.querySelectorAll('.lampiran-data-npwp').forEach(img => { let src = img.src; if(src && (src.startsWith('data:image') || src.includes('drive.google.com'))) npwpArr.push(src); }); 
+    let ijazahArr = []; document.querySelectorAll('.lampiran-data-ijazah').forEach(img => { let src = img.src; if(src && (src.startsWith('data:image') || src.startsWith('http'))) ijazahArr.push(src); }); 
+    let sertifikatArr = []; document.querySelectorAll('.lampiran-data-sertifikat').forEach(img => { let src = img.src; if(src && (src.startsWith('data:image') || src.startsWith('http'))) sertifikatArr.push(src); }); 
+    let ktpArr = []; document.querySelectorAll('.lampiran-data-ktp').forEach(img => { let src = img.src; if(src && (src.startsWith('data:image') || src.startsWith('http'))) ktpArr.push(src); }); 
+    let npwpArr = []; document.querySelectorAll('.lampiran-data-npwp').forEach(img => { let src = img.src; if(src && (src.startsWith('data:image') || src.startsWith('http'))) npwpArr.push(src); }); 
     
     let payload = { username: saveTarget, name: document.getElementById('name').value, roleTitle: document.getElementById('roleTitle').value, education: document.getElementById('education').value, photoBase64: document.getElementById('photoBase64').value, workExpsData: document.getElementById('workExpsData').value, expsData: document.getElementById('expsData').value, certsData: document.getElementById('certsData').value, ijazahData: JSON.stringify(ijazahArr), sertifikatData: JSON.stringify(sertifikatArr), ktpData: JSON.stringify(ktpArr), npwpData: JSON.stringify(npwpArr) };
     
@@ -420,13 +419,13 @@
       const reader = new FileReader(); reader.onload = function(e) { const img = new Image(); img.onload = function() { const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d'); let width = img.width; let height = img.height; const MAX_WIDTH = 800; const MAX_HEIGHT = 1000; if (width > height) { if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; } } else { if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; } } canvas.width = width; canvas.height = height; ctx.drawImage(img, 0, 0, width, height); const dataUrl = canvas.toDataURL('image/jpeg', 0.6); imgEl.src = dataUrl; imgEl.classList.remove('d-none'); document.getElementById(inputContId).classList.add('d-none'); document.getElementById(succContId).classList.remove('d-none'); updatePreview(); }; img.src = e.target.result; }; reader.readAsDataURL(file); 
   }
   
-  // PERBAIKAN: GETATTRIBUTE UNTUK MENCEGAH BUG PREVIEW
+  // PERBAIKAN: IZINKAN SEMUA BENTUK HTTP LINK MUNCUL
   function rebuildGallery(type) { 
       let galleryId = `lampiran-${type}-gallery`; let areaId = `lampiran-${type}-area`; let imgClass = `lampiran-data-${type}`; 
       const gallery = document.getElementById(galleryId); gallery.innerHTML = ''; let hasImages = false; 
       document.querySelectorAll(`img.${imgClass}`).forEach(img => { 
-          let src = img.src; // Gunakan .src untuk mendapatkan absolute URL yang sah
-          if(src && (src.startsWith('data:image') || src.includes('drive.google.com'))) { 
+          let src = img.src; 
+          if(src && (src.startsWith('data:image') || src.startsWith('http'))) { 
               hasImages = true; const newImg = document.createElement('img'); newImg.src = src; 
               newImg.setAttribute('width', '600'); newImg.style.width = '100%'; newImg.style.maxWidth = '600px'; newImg.style.marginBottom = '20px'; newImg.style.display = 'block'; newImg.style.marginLeft = 'auto'; newImg.style.marginRight = 'auto';
               gallery.appendChild(newImg); 
