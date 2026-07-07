@@ -40,6 +40,10 @@
     .btn-success { background-color: #1b7a43; border-color: #1b7a43; font-weight: 600; border-radius: 8px;}
     .btn-success:hover { background-color: #145c32; border-color: #145c32; }
 
+    /* CSS BARU: Efek hover untuk gambar preview agar terlihat interaktif */
+    .clickable-preview { transition: transform 0.2s ease, box-shadow 0.2s ease; cursor: pointer; border: 1px solid #e2e8f0; }
+    .clickable-preview:hover { transform: scale(1.02); box-shadow: 0 10px 20px rgba(0,0,0,0.1); border-color: #20c997; }
+
     .cv-paper { background: white; width: 100%; min-height: 1122px; padding: 50px; box-shadow: 0 5px 25px rgba(0,0,0,0.08); font-family: 'Times New Roman', Times, serif; color: #000; font-size: 14px; line-height: 1.5; border-radius: 4px; box-sizing: border-box;}
 
     @media print {
@@ -52,13 +56,15 @@
       .prevent-break { page-break-inside: auto !important; break-inside: auto !important; }
       table tr { page-break-inside: auto !important; break-inside: auto !important; }
       .cv-lampiran-section { page-break-before: always !important; }
+      /* Matikan efek hover saat diprint */
+      .clickable-preview { border: none !important; box-shadow: none !important; transform: none !important; cursor: default !important; }
     }
   </style>
 </head>
 <body>
 
   <div id="loginPage" class="premium-login-wrapper">
-    <div class="logo-text-top">starcore<span class="logo-badge">.co</span><br><span style="font-size: 12px; color: #6c757d; font-weight: 500;">v15.0 Universal Viewer Edition</span></div>
+    <div class="logo-text-top">starcore<span class="logo-badge">.co</span><br><span style="font-size: 12px; color: #6c757d; font-weight: 500;">v16.0 Clickable Preview</span></div>
     <div class="login-card text-center">
       <h1 class="login-title">STARCORE</h1><div class="login-subtitle">Premium CV Builder Application</div><p class="login-desc">Welcome! Please login to your account.</p>
       <div class="mb-3"><label class="input-label">Username</label><input type="text" id="loginUsername" class="elegant-input" placeholder="Enter your Username" required></div>
@@ -92,6 +98,7 @@
       </div>
 
       <div id="cvSection" class="row">
+        <!-- FORM KIRI -->
         <div class="col-lg-5 mb-4" style="height: 83vh; overflow-y: auto; padding-right: 15px;">
           <div class="form-card">
             <h4 id="cvTitleHeader" class="mb-4 fw-bold" style="color: #1b7a43;">Data CV Profesional</h4>
@@ -138,6 +145,7 @@
           </div>
         </div>
 
+        <!-- PREVIEW KANAN -->
         <div class="col-lg-7" style="height: 83vh; overflow-y: auto;">
           <div class="d-flex justify-content-between align-items-center mb-3 sticky-top bg-white p-3 rounded shadow-sm border">
             <h5 class="fw-bold m-0" style="color: #1b7a43;">Preview Dokumen CV</h5>
@@ -283,9 +291,6 @@
     } catch(e) { document.getElementById('name').value = ""; showElegantAlert('error', 'Gagal', 'Terjadi kesalahan jaringan.'); addLampiran('ijazah'); addLampiran('sertifikat'); addLampiran('ktp'); addLampiran('npwp'); updatePreview(); }
   }
 
-  // ==========================================
-  // PERBAIKAN: IZINKAN SEMUA JENIS HTTP TERBACA SAAT SIMPAN
-  // ==========================================
   async function submitData() {
     const btn = document.getElementById('btnSubmit'); const originalHTML = btn.innerHTML;
     if (!currentUser) { showElegantAlert('error', 'Sesi Habis', 'Silakan login kembali.'); return; }
@@ -419,16 +424,32 @@
       const reader = new FileReader(); reader.onload = function(e) { const img = new Image(); img.onload = function() { const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d'); let width = img.width; let height = img.height; const MAX_WIDTH = 800; const MAX_HEIGHT = 1000; if (width > height) { if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; } } else { if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; } } canvas.width = width; canvas.height = height; ctx.drawImage(img, 0, 0, width, height); const dataUrl = canvas.toDataURL('image/jpeg', 0.6); imgEl.src = dataUrl; imgEl.classList.remove('d-none'); document.getElementById(inputContId).classList.add('d-none'); document.getElementById(succContId).classList.remove('d-none'); updatePreview(); }; img.src = e.target.result; }; reader.readAsDataURL(file); 
   }
   
-  // PERBAIKAN: IZINKAN SEMUA BENTUK HTTP LINK MUNCUL
+  // PERBAIKAN: MEMBUAT GAMBAR PREVIEW BISA DIKLIK MENGARAH KE GOOGLE DRIVE
   function rebuildGallery(type) { 
       let galleryId = `lampiran-${type}-gallery`; let areaId = `lampiran-${type}-area`; let imgClass = `lampiran-data-${type}`; 
       const gallery = document.getElementById(galleryId); gallery.innerHTML = ''; let hasImages = false; 
+      
       document.querySelectorAll(`img.${imgClass}`).forEach(img => { 
           let src = img.src; 
           if(src && (src.startsWith('data:image') || src.startsWith('http'))) { 
-              hasImages = true; const newImg = document.createElement('img'); newImg.src = src; 
-              newImg.setAttribute('width', '600'); newImg.style.width = '100%'; newImg.style.maxWidth = '600px'; newImg.style.marginBottom = '20px'; newImg.style.display = 'block'; newImg.style.marginLeft = 'auto'; newImg.style.marginRight = 'auto';
-              gallery.appendChild(newImg); 
+              hasImages = true; 
+              
+              // Membuat tag <a> untuk membuat link yang bisa diklik
+              const linkWrapper = document.createElement('a');
+              linkWrapper.href = src; // Gunakan link sumber gambar
+              linkWrapper.target = '_blank'; // Buka di tab baru
+              linkWrapper.style.display = 'block';
+              linkWrapper.style.textDecoration = 'none';
+
+              const newImg = document.createElement('img'); newImg.src = src; 
+              newImg.setAttribute('width', '600'); newImg.style.width = '100%'; newImg.style.maxWidth = '600px'; 
+              newImg.style.marginBottom = '20px'; newImg.style.display = 'block'; newImg.style.marginLeft = 'auto'; newImg.style.marginRight = 'auto';
+              
+              // Tambahkan kelas CSS agar ada efek hover dan cursor pointer
+              newImg.classList.add('clickable-preview');
+
+              linkWrapper.appendChild(newImg);
+              gallery.appendChild(linkWrapper); 
           } 
       }); 
       document.getElementById(areaId).style.display = hasImages ? 'block' : 'none'; 
