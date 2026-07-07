@@ -11,6 +11,8 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- WAJIB DITAMBAHKAN: Bootstrap JS Bundle untuk Modal Pop-up -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   
   <style>
     body { background-color: #f4f7f9; font-family: 'Inter', sans-serif; color: #333; }
@@ -48,7 +50,7 @@
     @media print {
       @page { margin: 20mm; size: A4 portrait; } 
       body, html { background: white; height: auto !important; overflow: visible !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; margin: 0 !important; padding: 0 !important; }
-      #loginPage, .nav-header, .col-lg-5, .sticky-top, button { display: none !important; }
+      #loginPage, .nav-header, .col-lg-5, .sticky-top, button, .modal { display: none !important; }
       #cvSection, .col-lg-7, .container-fluid { display: block !important; width: 100% !important; max-width: 100% !important; height: auto !important; overflow: visible !important; padding: 0 !important; margin: 0 !important; }
       #cv-document { position: relative !important; width: 100% !important; margin: 0 !important; padding: 0 !important; box-shadow: none !important; border: none !important; box-sizing: border-box !important; }
       .section-title, .lampiran-title { page-break-after: avoid !important; break-after: avoid !important; }
@@ -62,7 +64,7 @@
 <body>
 
   <div id="loginPage" class="premium-login-wrapper">
-    <div class="logo-text-top">starcore<span class="logo-badge">.co</span><br><span style="font-size: 12px; color: #6c757d; font-weight: 500;">v17.0 Admin PoC Exporter</span></div>
+    <div class="logo-text-top">starcore<span class="logo-badge">.co</span><br><span style="font-size: 12px; color: #6c757d; font-weight: 500;">v18.0 Batch Preview Edition</span></div>
     <div class="login-card text-center">
       <h1 class="login-title">STARCORE</h1><div class="login-subtitle">Premium CV Builder Application</div><p class="login-desc">Welcome! Please login to your account.</p>
       <div class="mb-3"><label class="input-label">Username</label><input type="text" id="loginUsername" class="elegant-input" placeholder="Enter your Username" required></div>
@@ -93,7 +95,6 @@
           <div class="col-md-4">
               <div class="form-card mb-4" style="border-top: 4px solid #15a362;"><h5 class="fw-bold mb-3"><i class="fa-solid fa-user-plus text-success"></i> Tambah User Baru</h5><input type="text" id="addUsername" class="elegant-input mb-2" placeholder="Username"><input type="password" id="addPassword" class="elegant-input mb-2" placeholder="Password Default"><select id="addRole" class="elegant-input mb-3"><option value="User">User</option><option value="Admin">Admin</option></select><button class="btn btn-success w-100" onclick="submitNewUser()">Daftarkan User</button></div>
               
-              <!-- PANEL BARU: BATCH EXPORT PoC -->
               <div class="form-card mb-4" style="border-top: 4px solid #0dcaf0;">
                 <h5 class="fw-bold mb-3"><i class="fa-solid fa-briefcase text-info"></i> Batch Export PoC</h5>
                 <p class="text-muted" style="font-size:12px; line-height: 1.3;">Gabungkan banyak CV menjadi satu file Word. Centang lampiran yang diizinkan untuk PoC ini.</p>
@@ -112,7 +113,8 @@
                      <!-- List Checkbox User akan muncul di sini -->
                   </div>
                 </div>
-                <button class="btn btn-info text-white w-100 fw-bold shadow-sm" id="btnPocExport" onclick="downloadBatchPoC()"><i class="fa-solid fa-file-word"></i> Generate Gabungan CV</button>
+                <!-- Tombol ini sekarang memanggil fitur Preview, bukan langsung Download -->
+                <button class="btn btn-info text-white w-100 fw-bold shadow-sm" id="btnPocExport" onclick="previewBatchPoC()"><i class="fa-solid fa-eye"></i> Preview & Generate CV</button>
               </div>
           </div>
           
@@ -208,6 +210,28 @@
     </div>
   </div>
 
+  <!-- MODAL POP-UP PREVIEW BATCH CV -->
+  <div class="modal fade" id="previewBatchModal" tabindex="-1" aria-labelledby="previewBatchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header bg-light">
+          <h5 class="modal-title fw-bold text-info" id="previewBatchModalLabel"><i class="fa-solid fa-eye"></i> Preview Gabungan CV</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" style="background-color: #e9ecef; padding: 20px;">
+           <div id="batchPreviewContent" class="cv-paper" style="margin: 0 auto;">
+               <!-- Konten Preview HTML akan disuntikkan ke sini -->
+           </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+          <!-- Tombol Download dipindah ke sini -->
+          <button type="button" class="btn btn-info text-white fw-bold shadow-sm" onclick="executeBatchDownload()"><i class="fa-solid fa-file-word"></i> Unduh File Word Ini</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 <script>
   // ==========================================
   // PENGATURAN API GOOGLE APPS SCRIPT
@@ -221,6 +245,7 @@
   let certCount = 0; let workExpCount = 0; let projExpCount = 0; 
   let ijazahCount = 0; let lampSertCount = 0; let ktpCount = 0; let npwpCount = 0; 
   let isEnglish = false; let originalCVDataCache = null; 
+  let currentBatchHtml = ""; // Variabel penampung HTML Gabungan CV
 
   async function fetchAPI(actionName, payloadData = {}) {
     if(API_URL.includes("ISI_DENGAN_URL")) { showElegantAlert('error', 'Error API', 'URL API belum dimasukkan di dalam script.'); throw new Error("Missing API URL"); }
@@ -317,9 +342,9 @@
   }
 
   // ==========================================
-  // LOGIKA BARU: BATCH EXPORT PoC
+  // UPDATE LOGIKA: PREVIEW BATCH EXPORT PoC SEBELUM DOWNLOAD
   // ==========================================
-  async function downloadBatchPoC() {
+  async function previewBatchPoC() {
       const selectedUsers = Array.from(document.querySelectorAll('.poc-user-cb:checked')).map(cb => cb.value);
       if(selectedUsers.length === 0) return showElegantAlert('warning', 'Oops', 'Pilih minimal satu anggota tim untuk PoC.');
       
@@ -357,7 +382,7 @@
 
                   combinedHtml += `
                     ${pageBreak}
-                    <div style="font-family: 'Times New Roman', Times, serif; color: #000; font-size: 14px; line-height: 1.5;">
+                    <div style="font-family: 'Times New Roman', Times, serif; color: #000; font-size: 14px; line-height: 1.5; border-bottom: 2px dashed #e2e8f0; padding-bottom: 40px; margin-bottom: 40px;">
                         <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom: 20px; width: 100%; border-collapse: collapse;">
                           <tr>
                             <td width="115" valign="top" style="width: 115px; border: 1pt solid #000; text-align: center; height: 151px; background-color: #f8f9fa;">${photoHtml}</td>
@@ -382,13 +407,32 @@
                   `;
               });
 
-              const header = atob("PGh0bWwgeG1sbnM6bz0ndXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6b2ZmaWNlJyB4bWxuczp3PSd1cm46c2NoZW1hcy1taWNyb3NvZnQtY29tOm9mZmljZTp3b3JkJyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvVFIvUkVDLWh0bWw0MCc+PGhlYWQ+PG1ldGEgY2hhcnNldD0ndXRmLTgnPjx0aXRsZT5DVjwvdGl0bGU+PHN0eWxlPkBwYWdlIFdvcmRTZWN0aW9uMSB7IHNpemU6IDU5NS4zcHQgODQxLjlwdDsgbWFyZ2luOiA1Ni43cHQgNTYuN3B0IDU2LjdwdCA1Ni43cHQ7IH0gZGl2LldvcmRTZWN0aW9uMSB7IHBhZ2U6IFdvcmRTZWN0aW9uMTsgfSBib2R5IHsgZm9udC1mYW1pbHk6ICdUaW1lcyBOZXcgUm9tYW4nLCBUaW1lcywgc2VyaWY7IGZvbnQtc2l6ZTogMTRweDsgbGluZS1oZWlnaHQ6IDEuNTsgY29sb3I6ICMwMDA7IH0gaW1nIHsgbWF4LXdpZHRoOiAxMDAlOyB9PC9zdHlsZT48L2hlYWQ+PGJvZHk+PGRpdiBjbGFzcz0nV29yZFNlY3Rpb24xJz4=");
-              const footer = atob("PC9kaXY+PC9ib2R5PjwvaHRtbD4=");
-              const blob = new Blob(['\ufeff', header + combinedHtml + footer], { type: 'application/msword' });
-              const url = URL.createObjectURL(blob); const link = document.createElement('A'); link.href = url; link.download = 'Batch_CV_PoC_StarCore.doc'; document.body.appendChild(link); link.click(); document.body.removeChild(link);
-              Toast.fire({ icon: 'success', title: 'Batch Word Berhasil Diunduh!' });
+              // Simpan HTML Gabungan ke variabel global
+              currentBatchHtml = combinedHtml;
+              
+              // Suntikkan ke Modal dan Tampilkan
+              document.getElementById('batchPreviewContent').innerHTML = currentBatchHtml;
+              const previewModal = new bootstrap.Modal(document.getElementById('previewBatchModal'));
+              previewModal.show();
+              
           } else { showElegantAlert('error', 'Gagal', 'Data tidak ditemukan.'); }
-      } catch(e) { showElegantAlert('error', 'Error', 'Gagal memproses Batch Export.'); } finally { btn.innerHTML = origHtml; btn.disabled = false; }
+      } catch(e) { showElegantAlert('error', 'Error', 'Gagal memproses Batch Preview.'); } finally { btn.innerHTML = origHtml; btn.disabled = false; }
+  }
+
+  // LOGIKA BARU: Eksekusi Download dari Dalam Modal Pop-up
+  function executeBatchDownload() {
+      Toast.fire({ icon: 'info', title: 'Menyiapkan file Word...' });
+      const header = atob("PGh0bWwgeG1sbnM6bz0ndXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6b2ZmaWNlJyB4bWxuczp3PSd1cm46c2NoZW1hcy1taWNyb3NvZnQtY29tOm9mZmljZTp3b3JkJyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvVFIvUkVDLWh0bWw0MCc+PGhlYWQ+PG1ldGEgY2hhcnNldD0ndXRmLTgnPjx0aXRsZT5DVjwvdGl0bGU+PHN0eWxlPkBwYWdlIFdvcmRTZWN0aW9uMSB7IHNpemU6IDU5NS4zcHQgODQxLjlwdDsgbWFyZ2luOiA1Ni43cHQgNTYuN3B0IDU2LjdwdCA1Ni43cHQ7IH0gZGl2LldvcmRTZWN0aW9uMSB7IHBhZ2U6IFdvcmRTZWN0aW9uMTsgfSBib2R5IHsgZm9udC1mYW1pbHk6ICdUaW1lcyBOZXcgUm9tYW4nLCBUaW1lcywgc2VyaWY7IGZvbnQtc2l6ZTogMTRweDsgbGluZS1oZWlnaHQ6IDEuNTsgY29sb3I6ICMwMDA7IH0gaW1nIHsgbWF4LXdpZHRoOiAxMDAlOyB9PC9zdHlsZT48L2hlYWQ+PGJvZHk+PGRpdiBjbGFzcz0nV29yZFNlY3Rpb24xJz4=");
+      const footer = atob("PC9kaXY+PC9ib2R5PjwvaHRtbD4=");
+      const blob = new Blob(['\ufeff', header + currentBatchHtml + footer], { type: 'application/msword' });
+      const url = URL.createObjectURL(blob); 
+      const link = document.createElement('A'); 
+      link.href = url; 
+      link.download = 'Batch_CV_PoC_StarCore.doc'; 
+      document.body.appendChild(link); 
+      link.click(); 
+      document.body.removeChild(link);
+      Toast.fire({ icon: 'success', title: 'Batch Word Berhasil Diunduh!' });
   }
 
   async function translateForm() {
