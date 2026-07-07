@@ -40,7 +40,6 @@
     .btn-success { background-color: #1b7a43; border-color: #1b7a43; font-weight: 600; border-radius: 8px;}
     .btn-success:hover { background-color: #145c32; border-color: #145c32; }
 
-    /* CSS BARU: Efek hover untuk gambar preview agar terlihat interaktif */
     .clickable-preview { transition: transform 0.2s ease, box-shadow 0.2s ease; cursor: pointer; border: 1px solid #e2e8f0; }
     .clickable-preview:hover { transform: scale(1.02); box-shadow: 0 10px 20px rgba(0,0,0,0.1); border-color: #20c997; }
 
@@ -56,7 +55,6 @@
       .prevent-break { page-break-inside: auto !important; break-inside: auto !important; }
       table tr { page-break-inside: auto !important; break-inside: auto !important; }
       .cv-lampiran-section { page-break-before: always !important; }
-      /* Matikan efek hover saat diprint */
       .clickable-preview { border: none !important; box-shadow: none !important; transform: none !important; cursor: default !important; }
     }
   </style>
@@ -64,7 +62,7 @@
 <body>
 
   <div id="loginPage" class="premium-login-wrapper">
-    <div class="logo-text-top">starcore<span class="logo-badge">.co</span><br><span style="font-size: 12px; color: #6c757d; font-weight: 500;">v16.0 Clickable Preview</span></div>
+    <div class="logo-text-top">starcore<span class="logo-badge">.co</span><br><span style="font-size: 12px; color: #6c757d; font-weight: 500;">v17.0 Admin PoC Exporter</span></div>
     <div class="login-card text-center">
       <h1 class="login-title">STARCORE</h1><div class="login-subtitle">Premium CV Builder Application</div><p class="login-desc">Welcome! Please login to your account.</p>
       <div class="mb-3"><label class="input-label">Username</label><input type="text" id="loginUsername" class="elegant-input" placeholder="Enter your Username" required></div>
@@ -92,7 +90,32 @@
       
       <div id="adminSection" class="d-none">
         <div class="row">
-          <div class="col-md-4"><div class="form-card mb-4" style="border-top: 4px solid #15a362;"><h5 class="fw-bold mb-3"><i class="fa-solid fa-user-plus text-success"></i> Tambah User Baru</h5><input type="text" id="addUsername" class="elegant-input mb-2" placeholder="Username"><input type="password" id="addPassword" class="elegant-input mb-2" placeholder="Password Default"><select id="addRole" class="elegant-input mb-3"><option value="User">User</option><option value="Admin">Admin</option></select><button class="btn btn-success w-100" onclick="submitNewUser()">Daftarkan User</button></div></div>
+          <div class="col-md-4">
+              <div class="form-card mb-4" style="border-top: 4px solid #15a362;"><h5 class="fw-bold mb-3"><i class="fa-solid fa-user-plus text-success"></i> Tambah User Baru</h5><input type="text" id="addUsername" class="elegant-input mb-2" placeholder="Username"><input type="password" id="addPassword" class="elegant-input mb-2" placeholder="Password Default"><select id="addRole" class="elegant-input mb-3"><option value="User">User</option><option value="Admin">Admin</option></select><button class="btn btn-success w-100" onclick="submitNewUser()">Daftarkan User</button></div>
+              
+              <!-- PANEL BARU: BATCH EXPORT PoC -->
+              <div class="form-card mb-4" style="border-top: 4px solid #0dcaf0;">
+                <h5 class="fw-bold mb-3"><i class="fa-solid fa-briefcase text-info"></i> Batch Export PoC</h5>
+                <p class="text-muted" style="font-size:12px; line-height: 1.3;">Gabungkan banyak CV menjadi satu file Word. Centang lampiran yang diizinkan untuk PoC ini.</p>
+                <div class="mb-3">
+                  <label class="input-label">Pilih Lampiran yang Disertakan:</label>
+                  <div class="p-2 border rounded" style="background:#fdfdfd; font-size:13px;">
+                     <div class="form-check"><input class="form-check-input" type="checkbox" id="pocIncIjazah" checked><label class="form-check-label text-dark fw-medium">Ijazah</label></div>
+                     <div class="form-check"><input class="form-check-input" type="checkbox" id="pocIncSertifikat" checked><label class="form-check-label text-dark fw-medium">Sertifikat Profesional</label></div>
+                     <div class="form-check"><input class="form-check-input" type="checkbox" id="pocIncKtp" checked><label class="form-check-label text-dark fw-medium">KTP</label></div>
+                     <div class="form-check"><input class="form-check-input" type="checkbox" id="pocIncNpwp"><label class="form-check-label text-danger fw-medium">NPWP (Otomatis Sembunyi)</label></div>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label class="input-label">Pilih Anggota Tim:</label>
+                  <div id="pocUserList" class="p-2 border rounded" style="max-height: 120px; overflow-y: auto; background:#fdfdfd; font-size:13px;">
+                     <!-- List Checkbox User akan muncul di sini -->
+                  </div>
+                </div>
+                <button class="btn btn-info text-white w-100 fw-bold shadow-sm" id="btnPocExport" onclick="downloadBatchPoC()"><i class="fa-solid fa-file-word"></i> Generate Gabungan CV</button>
+              </div>
+          </div>
+          
           <div class="col-md-8"><div class="form-card"><div class="d-flex justify-content-between mb-3"><h5 class="fw-bold"><i class="fa-solid fa-users text-primary"></i> Kelola Pengguna</h5><button class="btn btn-sm btn-light border" onclick="loadUsers()"><i class="fa-solid fa-rotate-right"></i> Refresh</button></div><div class="table-responsive"><table class="table table-hover align-middle"><thead class="table-light"><tr><th>Username</th><th>Role</th><th class="text-center">Aksi</th></tr></thead><tbody id="userTableBody"><tr><td colspan="3" class="text-center text-muted">Mengambil data...</td></tr></tbody></table></div></div></div>
         </div>
       </div>
@@ -132,7 +155,6 @@
 
               <div class="p-4 mt-4" style="background: #f8fafc; border-radius: 12px; border: 1px dashed #cbd5e1;">
                 <h6 class="fw-bold text-secondary mb-3"><i class="fa-solid fa-paperclip me-1"></i>Lampiran Dokumen Tambahan</h6>
-                
                 <div class="d-flex justify-content-between align-items-center mb-2"><span class="fw-semibold text-dark" style="font-size:14px;">Ijazah</span><button type="button" class="btn btn-sm btn-light border" onclick="addLampiran('ijazah')"><i class="fa-solid fa-plus text-muted"></i></button></div><div id="ijazahContainer"></div><hr class="my-3 border-secondary opacity-25">
                 <div class="d-flex justify-content-between align-items-center mb-2"><span class="fw-semibold text-dark" style="font-size:14px;">Diagram/Sertifikat</span><button type="button" class="btn btn-sm btn-light border" onclick="addLampiran('sertifikat')"><i class="fa-solid fa-plus text-muted"></i></button></div><div id="lampSertifikatContainer"></div><hr class="my-3 border-secondary opacity-25">
                 <div class="d-flex justify-content-between align-items-center mb-2"><span class="fw-semibold text-dark" style="font-size:14px;">KTP</span><button type="button" class="btn btn-sm btn-light border" onclick="addLampiran('ktp')"><i class="fa-solid fa-plus text-muted"></i></button></div><div id="ktpContainer"></div><hr class="my-3 border-secondary opacity-25">
@@ -190,7 +212,7 @@
   // ==========================================
   // PENGATURAN API GOOGLE APPS SCRIPT
   // ==========================================
-  const API_URL = "https://script.google.com/macros/s/AKfycbz7N2MyRATKlySC6us4iYM1rP7GwSMBvaTicdqY8sT9196YxxcBbzadyY82scOoDCyz/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbyUY9nW3IYaQCDnncHxT7yokz_jkUeJtXYzynt-9Erh_5nIgzRBA_dJsubR29KMOinW/exec";
   
   const Toast = Swal.mixin({ toast: true, position: 'top-end', showConfirmButton: false, timer: 3000, timerProgressBar: true });
   function showElegantAlert(type, title, text) { Swal.fire({ icon: type, title: title, text: text, confirmButtonColor: '#15a362', confirmButtonText: 'Mengerti' }); }
@@ -225,8 +247,13 @@
   async function loadUsers() {
     document.getElementById("userTableBody").innerHTML = '<tr><td colspan="3" class="text-center text-muted">Mengambil data dari server...</td></tr>';
     try {
-      const res = await fetchAPI('getAdminData'); let html = ""; 
-      res.data.forEach(row => { let targetUser = row[0]; let btnHapus = targetUser === currentUser ? `<span class="badge bg-secondary">Akun Anda</span>` : `<button class="btn btn-sm btn-outline-danger" onclick="removeUser('${targetUser}')"><i class="fa-solid fa-trash"></i></button>`; let roleBadge = row[1] === 'Admin' ? `<span class="badge bg-primary">${row[1]}</span>` : `<span class="badge bg-light text-dark border">${row[1]}</span>`; let btnLihat = `<button class="btn btn-sm btn-info text-white me-2" onclick="adminViewCV('${targetUser}')"><i class="fa-solid fa-eye"></i> Lihat CV</button>`; html += `<tr><td class="fw-semibold">${targetUser}</td><td>${roleBadge}</td><td class="text-center">${btnLihat}${btnHapus}</td></tr>`; }); document.getElementById("userTableBody").innerHTML = html;
+      const res = await fetchAPI('getAdminData'); let html = ""; let pocListHtml = "";
+      res.data.forEach(row => { 
+          let targetUser = row[0]; let btnHapus = targetUser === currentUser ? `<span class="badge bg-secondary">Akun Anda</span>` : `<button class="btn btn-sm btn-outline-danger" onclick="removeUser('${targetUser}')"><i class="fa-solid fa-trash"></i></button>`; let roleBadge = row[1] === 'Admin' ? `<span class="badge bg-primary">${row[1]}</span>` : `<span class="badge bg-light text-dark border">${row[1]}</span>`; let btnLihat = `<button class="btn btn-sm btn-info text-white me-2" onclick="adminViewCV('${targetUser}')"><i class="fa-solid fa-eye"></i> Lihat CV</button>`; html += `<tr><td class="fw-semibold">${targetUser}</td><td>${roleBadge}</td><td class="text-center">${btnLihat}${btnHapus}</td></tr>`; 
+          pocListHtml += `<div class="form-check"><input class="form-check-input poc-user-cb" type="checkbox" value="${targetUser}" id="poc-${targetUser}"><label class="form-check-label text-dark fw-medium" for="poc-${targetUser}">${targetUser} (${row[1]})</label></div>`;
+      }); 
+      document.getElementById("userTableBody").innerHTML = html;
+      document.getElementById("pocUserList").innerHTML = pocListHtml;
     } catch(e) { document.getElementById("userTableBody").innerHTML = '<tr><td colspan="3" class="text-center text-danger">Gagal menarik data.</td></tr>'; }
   }
 
@@ -252,42 +279,24 @@
   async function loadUserCVData(username) {
     if(!username) return; 
     document.getElementById('name').value = "Menarik data via API...";
-    resetPasFoto();
-    document.getElementById('ijazahContainer').innerHTML = ''; document.getElementById('lampSertifikatContainer').innerHTML = ''; document.getElementById('ktpContainer').innerHTML = ''; document.getElementById('npwpContainer').innerHTML = ''; 
+    resetPasFoto(); document.getElementById('ijazahContainer').innerHTML = ''; document.getElementById('lampSertifikatContainer').innerHTML = ''; document.getElementById('ktpContainer').innerHTML = ''; document.getElementById('npwpContainer').innerHTML = ''; 
     ijazahCount = 0; lampSertCount = 0; ktpCount = 0; npwpCount = 0;
     
     try {
       const res = await fetchAPI('getUserData', { username: username });
       if (res.status === 'success') {
         document.getElementById('name').value = res.name || ""; document.getElementById('roleTitle').value = res.roleTitle || ""; document.getElementById('education').value = res.education || "";
-        
-        if (res.photoUrl && res.photoUrl.trim() !== "") { 
-            document.getElementById('prev-photo').src = res.photoUrl; document.getElementById('prev-photo').style.display = 'block'; document.getElementById('photoPlaceholder').style.display = 'none'; document.getElementById('photoBase64').value = res.photoUrl; 
-            document.getElementById('input-container-pasfoto').classList.add('d-none'); document.getElementById('success-container-pasfoto').classList.remove('d-none');
-        }
-        
-        let validIjazah = res.ijazah ? res.ijazah.filter(url => url && url.trim() !== "") : [];
-        if (validIjazah.length > 0) { validIjazah.forEach(url => { addLampiran('ijazah'); document.getElementById(`img-ijazah-${ijazahCount}`).src = url; setFileBadge(`ijazah-${ijazahCount}`); }); } else { addLampiran('ijazah'); }
-        
-        let validSert = res.sertifikat ? res.sertifikat.filter(url => url && url.trim() !== "") : [];
-        if (validSert.length > 0) { validSert.forEach(url => { addLampiran('sertifikat'); document.getElementById(`img-lampsert-${lampSertCount}`).src = url; setFileBadge(`lampsert-${lampSertCount}`); }); } else { addLampiran('sertifikat'); }
-        
-        let validKtp = res.ktp ? res.ktp.filter(url => url && url.trim() !== "") : [];
-        if (validKtp.length > 0) { validKtp.forEach(url => { addLampiran('ktp'); document.getElementById(`img-ktp-${ktpCount}`).src = url; setFileBadge(`ktp-${ktpCount}`); }); } else { addLampiran('ktp'); }
-        
-        let validNpwp = res.npwp ? res.npwp.filter(url => url && url.trim() !== "") : [];
-        if (validNpwp.length > 0) { validNpwp.forEach(url => { addLampiran('npwp'); document.getElementById(`img-npwp-${npwpCount}`).src = url; setFileBadge(`npwp-${npwpCount}`); }); } else { addLampiran('npwp'); }
+        if (res.photoUrl && res.photoUrl.trim() !== "") { document.getElementById('prev-photo').src = res.photoUrl; document.getElementById('prev-photo').style.display = 'block'; document.getElementById('photoPlaceholder').style.display = 'none'; document.getElementById('photoBase64').value = res.photoUrl; document.getElementById('input-container-pasfoto').classList.add('d-none'); document.getElementById('success-container-pasfoto').classList.remove('d-none'); }
+        let validIjazah = res.ijazah ? res.ijazah.filter(url => url && url.trim() !== "") : []; if (validIjazah.length > 0) { validIjazah.forEach(url => { addLampiran('ijazah'); document.getElementById(`img-ijazah-${ijazahCount}`).src = url; setFileBadge(`ijazah-${ijazahCount}`); }); } else { addLampiran('ijazah'); }
+        let validSert = res.sertifikat ? res.sertifikat.filter(url => url && url.trim() !== "") : []; if (validSert.length > 0) { validSert.forEach(url => { addLampiran('sertifikat'); document.getElementById(`img-lampsert-${lampSertCount}`).src = url; setFileBadge(`lampsert-${lampSertCount}`); }); } else { addLampiran('sertifikat'); }
+        let validKtp = res.ktp ? res.ktp.filter(url => url && url.trim() !== "") : []; if (validKtp.length > 0) { validKtp.forEach(url => { addLampiran('ktp'); document.getElementById(`img-ktp-${ktpCount}`).src = url; setFileBadge(`ktp-${ktpCount}`); }); } else { addLampiran('ktp'); }
+        let validNpwp = res.npwp ? res.npwp.filter(url => url && url.trim() !== "") : []; if (validNpwp.length > 0) { validNpwp.forEach(url => { addLampiran('npwp'); document.getElementById(`img-npwp-${npwpCount}`).src = url; setFileBadge(`npwp-${npwpCount}`); }); } else { addLampiran('npwp'); }
         
         document.getElementById('workExpContainer').innerHTML = ''; workExpCount = 0; if (res.workExps && res.workExps.length > 0) { res.workExps.forEach(w => { addWorkExp(); const boxes = document.querySelectorAll('#workExpContainer .dynamic-box'); const box = boxes[boxes.length - 1]; box.querySelector('.work-period').value = w.period || ""; box.querySelector('.work-company').value = w.company || ""; box.querySelector('.work-role').value = w.role || ""; box.querySelector('.work-desc').value = w.desc || ""; }); } else { addWorkExp(); }
         document.getElementById('projExpContainer').innerHTML = ''; projExpCount = 0; if (res.projExps && res.projExps.length > 0) { res.projExps.forEach(p => { addProjExp(); const boxes = document.querySelectorAll('#projExpContainer .dynamic-box'); const box = boxes[boxes.length - 1]; box.querySelector('.proj-year').value = p.year || ""; box.querySelector('.proj-client').value = p.client || ""; box.querySelector('.proj-role').value = p.role || ""; box.querySelector('.proj-desc').value = p.desc || ""; }); } else { addProjExp(); }
         document.getElementById('certContainer').innerHTML = ''; certCount = 0; if (res.certs && res.certs.length > 0) { res.certs.forEach(c => { addCert(); const boxes = document.querySelectorAll('#certContainer .dynamic-box'); const box = boxes[boxes.length - 1]; box.querySelector('.cert-no').value = c.no || ""; box.querySelector('.cert-field').value = c.field || ""; box.querySelector('.cert-date').value = c.date || ""; box.querySelector('.cert-expiry').value = c.expiry || ""; }); } else { addCert(); }
-        
-        isEnglish = false; originalCVDataCache = null; document.getElementById('btnTranslate').innerHTML = '<i class="fa-solid fa-language text-primary me-1"></i> Translate to English';
-        updatePreview(); 
-      } else { 
-          document.getElementById('name').value = ""; document.getElementById('workExpContainer').innerHTML = ''; workExpCount = 0; addWorkExp(); document.getElementById('projExpContainer').innerHTML = ''; projExpCount = 0; addProjExp(); document.getElementById('certContainer').innerHTML = ''; certCount = 0; addCert(); 
-          addLampiran('ijazah'); addLampiran('sertifikat'); addLampiran('ktp'); addLampiran('npwp'); updatePreview(); 
-      }
+        isEnglish = false; originalCVDataCache = null; document.getElementById('btnTranslate').innerHTML = '<i class="fa-solid fa-language text-primary me-1"></i> Translate to English'; updatePreview(); 
+      } else { document.getElementById('name').value = ""; document.getElementById('workExpContainer').innerHTML = ''; workExpCount = 0; addWorkExp(); document.getElementById('projExpContainer').innerHTML = ''; projExpCount = 0; addProjExp(); document.getElementById('certContainer').innerHTML = ''; certCount = 0; addCert(); addLampiran('ijazah'); addLampiran('sertifikat'); addLampiran('ktp'); addLampiran('npwp'); updatePreview(); }
     } catch(e) { document.getElementById('name').value = ""; showElegantAlert('error', 'Gagal', 'Terjadi kesalahan jaringan.'); addLampiran('ijazah'); addLampiran('sertifikat'); addLampiran('ktp'); addLampiran('npwp'); updatePreview(); }
   }
 
@@ -297,22 +306,93 @@
     if (isEnglish) { showElegantAlert('warning', 'Peringatan!', 'Silakan kembalikan CV ke Teks Asli (Indonesia) terlebih dahulu sebelum menekan tombol Simpan.'); return; }
 
     let saveTarget = viewingUser ? viewingUser : currentUser;
-    
     let ijazahArr = []; document.querySelectorAll('.lampiran-data-ijazah').forEach(img => { let src = img.src; if(src && (src.startsWith('data:image') || src.startsWith('http'))) ijazahArr.push(src); }); 
     let sertifikatArr = []; document.querySelectorAll('.lampiran-data-sertifikat').forEach(img => { let src = img.src; if(src && (src.startsWith('data:image') || src.startsWith('http'))) sertifikatArr.push(src); }); 
     let ktpArr = []; document.querySelectorAll('.lampiran-data-ktp').forEach(img => { let src = img.src; if(src && (src.startsWith('data:image') || src.startsWith('http'))) ktpArr.push(src); }); 
     let npwpArr = []; document.querySelectorAll('.lampiran-data-npwp').forEach(img => { let src = img.src; if(src && (src.startsWith('data:image') || src.startsWith('http'))) npwpArr.push(src); }); 
     
     let payload = { username: saveTarget, name: document.getElementById('name').value, roleTitle: document.getElementById('roleTitle').value, education: document.getElementById('education').value, photoBase64: document.getElementById('photoBase64').value, workExpsData: document.getElementById('workExpsData').value, expsData: document.getElementById('expsData').value, certsData: document.getElementById('certsData').value, ijazahData: JSON.stringify(ijazahArr), sertifikatData: JSON.stringify(sertifikatArr), ktpData: JSON.stringify(ktpArr), npwpData: JSON.stringify(npwpArr) };
-    
     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> Menyimpan API...'; btn.disabled = true;
     try { const res = await fetchAPI('saveData', payload); if(res.status === 'error') { showElegantAlert('error', 'Gagal', res.message); } else { Toast.fire({ icon: 'success', title: `Data ${saveTarget} berhasil disimpan!` }); } } catch(e) { showElegantAlert('error', 'Terputus', 'Server tidak merespons.'); } finally { btn.innerHTML = originalHTML; btn.disabled = false; }
   }
 
+  // ==========================================
+  // LOGIKA BARU: BATCH EXPORT PoC
+  // ==========================================
+  async function downloadBatchPoC() {
+      const selectedUsers = Array.from(document.querySelectorAll('.poc-user-cb:checked')).map(cb => cb.value);
+      if(selectedUsers.length === 0) return showElegantAlert('warning', 'Oops', 'Pilih minimal satu anggota tim untuk PoC.');
+      
+      const incIjazah = document.getElementById('pocIncIjazah').checked;
+      const incSertifikat = document.getElementById('pocIncSertifikat').checked;
+      const incKtp = document.getElementById('pocIncKtp').checked;
+      const incNpwp = document.getElementById('pocIncNpwp').checked;
+
+      const btn = document.getElementById('btnPocExport'); const origHtml = btn.innerHTML;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> Merajut Dokumen...'; btn.disabled = true;
+
+      try {
+          const res = await fetchAPI('getBatchCVData', { usernames: selectedUsers });
+          if(res.status === 'success' && res.data.length > 0) {
+              let combinedHtml = "";
+              const formatList = (text) => text.split('\n').filter(l => l.trim() !== '').map(l => `<li style="margin-bottom: 4px; font-family: 'Times New Roman', Times, serif;">${l}</li>`).join('');
+              
+              res.data.forEach((user, index) => {
+                  let eduText = (user.education || "-").replace(/\n/g, '<br>');
+                  
+                  let workHtml = ""; user.workExps.forEach((w, i) => { workHtml += `<table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 15px; border-collapse: collapse;"><tr><td width="25" valign="top" style="width: 25px; font-weight: bold;">${i + 1}.</td><td valign="top"><table width="100%" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse;"><tr><td width="140" valign="top" style="width: 140px; padding-bottom: 4px;">Periode</td><td width="15" valign="top" align="center" style="width: 15px; padding-bottom: 4px;">:</td><td valign="top" style="padding-bottom: 4px;">${w.period}</td></tr><tr><td width="140" valign="top" style="width: 140px; padding-bottom: 4px;">Perusahaan</td><td width="15" valign="top" align="center" style="width: 15px; padding-bottom: 4px;">:</td><td valign="top" style="padding-bottom: 4px;">${w.company}</td></tr><tr><td width="140" valign="top" style="width: 140px; padding-bottom: 4px;">Posisi</td><td width="15" valign="top" align="center" style="width: 15px; padding-bottom: 4px;">:</td><td valign="top" style="padding-bottom: 4px;">${w.role}</td></tr><tr><td width="140" valign="top" style="width: 140px; padding-bottom: 4px;">Deskripsi</td><td width="15" valign="top" align="center" style="width: 15px; padding-bottom: 4px;">:</td><td valign="top" style="padding-bottom: 4px;"><ul style="margin: 0; padding-left: 20px;">${formatList(w.desc)}</ul></td></tr></table></td></tr></table>`; });
+                  
+                  let projHtml = ""; user.projExps.forEach((p, i) => { projHtml += `<table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 15px; border-collapse: collapse;"><tr><td width="25" valign="top" style="width: 25px; font-weight: bold;">${i + 1}.</td><td valign="top"><table width="100%" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse;"><tr><td width="140" valign="top" style="width: 140px; padding-bottom: 4px;">Tahun</td><td width="15" valign="top" align="center" style="width: 15px; padding-bottom: 4px;">:</td><td valign="top" style="padding-bottom: 4px;">${p.year}</td></tr><tr><td width="140" valign="top" style="width: 140px; padding-bottom: 4px;">Klien / Project</td><td width="15" valign="top" align="center" style="width: 15px; padding-bottom: 4px;">:</td><td valign="top" style="padding-bottom: 4px;">${p.client}</td></tr><tr><td width="140" valign="top" style="width: 140px; padding-bottom: 4px;">Posisi</td><td width="15" valign="top" align="center" style="width: 15px; padding-bottom: 4px;">:</td><td valign="top" style="padding-bottom: 4px;">${p.role}</td></tr><tr><td width="140" valign="top" style="width: 140px; padding-bottom: 4px;">Deskripsi</td><td width="15" valign="top" align="center" style="width: 15px; padding-bottom: 4px;">:</td><td valign="top" style="padding-bottom: 4px;"><ul style="margin: 0; padding-left: 20px;">${formatList(p.desc)}</ul></td></tr></table></td></tr></table>`; });
+                  
+                  let certsHtml = ""; user.certs.forEach((c, i) => { certsHtml += `<table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 15px; border-collapse: collapse;"><tr><td width="25" valign="top" style="width: 25px; font-weight: bold;">${i + 1}.</td><td valign="top"><table width="100%" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse;"><tr><td width="140" valign="top" style="width: 140px; padding-bottom: 4px;">Nomor Sertifikat</td><td width="15" valign="top" align="center" style="width: 15px; padding-bottom: 4px;">:</td><td valign="top" style="padding-bottom: 4px;">${c.no}</td></tr><tr><td width="140" valign="top" style="width: 140px; padding-bottom: 4px;">Bidang Profesi</td><td width="15" valign="top" align="center" style="width: 15px; padding-bottom: 4px;">:</td><td valign="top" style="padding-bottom: 4px;"><em>${c.field}</em></td></tr><tr><td width="140" valign="top" style="width: 140px; padding-bottom: 4px;">Tanggal Terbit</td><td width="15" valign="top" align="center" style="width: 15px; padding-bottom: 4px;">:</td><td valign="top" style="padding-bottom: 4px;">${c.date}</td></tr><tr><td width="140" valign="top" style="width: 140px; padding-bottom: 4px;">Masa Berlaku</td><td width="15" valign="top" align="center" style="width: 15px; padding-bottom: 4px;">:</td><td valign="top" style="padding-bottom: 4px;">${c.expiry}</td></tr></table></td></tr></table>`; });
+
+                  let ijazahLamp = ""; if(incIjazah && user.ijazah.length > 0) { user.ijazah.filter(u=>u).forEach(u => ijazahLamp += `<img src="${u}" width="600" style="width:100%; max-width:600px; margin-bottom:20px; display:block; margin-left:auto; margin-right:auto;">`); }
+                  let sertLamp = ""; if(incSertifikat && user.sertifikat.length > 0) { user.sertifikat.filter(u=>u).forEach(u => sertLamp += `<img src="${u}" width="600" style="width:100%; max-width:600px; margin-bottom:20px; display:block; margin-left:auto; margin-right:auto;">`); }
+                  let ktpLamp = ""; if(incKtp && user.ktp.length > 0) { user.ktp.filter(u=>u).forEach(u => ktpLamp += `<img src="${u}" width="600" style="width:100%; max-width:600px; margin-bottom:20px; display:block; margin-left:auto; margin-right:auto;">`); }
+                  let npwpLamp = ""; if(incNpwp && user.npwp.length > 0) { user.npwp.filter(u=>u).forEach(u => npwpLamp += `<img src="${u}" width="600" style="width:100%; max-width:600px; margin-bottom:20px; display:block; margin-left:auto; margin-right:auto;">`); }
+
+                  let photoHtml = user.photoUrl ? `<img src="${user.photoUrl}" width="113" height="151">` : `<div style="padding-top:55px; color:#adb5bd; font-size:12px; font-family:sans-serif;">Foto 3x4</div>`;
+
+                  let pageBreak = index > 0 ? `<br clear="all" style="page-break-before:always; mso-break-type:page-break" />` : ``;
+
+                  combinedHtml += `
+                    ${pageBreak}
+                    <div style="font-family: 'Times New Roman', Times, serif; color: #000; font-size: 14px; line-height: 1.5;">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom: 20px; width: 100%; border-collapse: collapse;">
+                          <tr>
+                            <td width="115" valign="top" style="width: 115px; border: 1pt solid #000; text-align: center; height: 151px; background-color: #f8f9fa;">${photoHtml}</td>
+                            <td valign="middle" align="center" style="padding: 0 10px; text-align: center;">
+                              <h2 style="margin: 0 0 8px 0; font-size: 18px; font-weight: bold; font-style: italic;">Curriculum Vitae (CV)</h2>
+                              <h1 style="margin: 0 0 8px 0; font-size: 24px; font-weight: bold;">${user.name || "-"}</h1>
+                              <h3 style="margin: 0; font-size: 16px; font-weight: bold; font-style: italic;">${user.roleTitle || "-"}</h3>
+                            </td>
+                            <td width="115" valign="top" style="width: 115px;">&nbsp;</td>
+                          </tr>
+                        </table>
+                        <h4 style="font-size: 15px; margin: 20px 0 10px 0; font-weight: bold;">Pendidikan</h4><div style="margin-bottom: 20px; line-height: 1.5;">${eduText}</div>
+                        <h4 style="font-size: 15px; margin: 20px 0 10px 0; font-weight: bold;">Pengalaman Kerja</h4><div>${workHtml || '-'}</div>
+                        <h4 style="font-size: 15px; margin: 20px 0 10px 0; font-weight: bold;">Pengalaman Project</h4><div>${projHtml || '-'}</div>
+                        <h4 style="font-size: 15px; margin: 20px 0 10px 0; font-weight: bold;">Sertifikat Profesi/Kompetensi</h4><div>${certsHtml || '-'}</div>
+                        
+                        ${ijazahLamp ? `<br clear="all" style="page-break-before:always; mso-break-type:page-break" /><h3 style="text-align: center; margin: 20px 0 15px 0; font-weight: bold; font-size: 16px;">LAMPIRAN IJAZAH</h3><div style="text-align: center;">${ijazahLamp}</div>` : ''}
+                        ${sertLamp ? `<br clear="all" style="page-break-before:always; mso-break-type:page-break" /><h3 style="text-align: center; margin: 20px 0 15px 0; font-weight: bold; font-size: 16px;">LAMPIRAN SERTIFIKAT</h3><div style="text-align: center;">${sertLamp}</div>` : ''}
+                        ${ktpLamp ? `<br clear="all" style="page-break-before:always; mso-break-type:page-break" /><h3 style="text-align: center; margin: 20px 0 15px 0; font-weight: bold; font-size: 16px;">LAMPIRAN KTP</h3><div style="text-align: center;">${ktpLamp}</div>` : ''}
+                        ${npwpLamp ? `<br clear="all" style="page-break-before:always; mso-break-type:page-break" /><h3 style="text-align: center; margin: 20px 0 15px 0; font-weight: bold; font-size: 16px;">LAMPIRAN NPWP</h3><div style="text-align: center;">${npwpLamp}</div>` : ''}
+                    </div>
+                  `;
+              });
+
+              const header = atob("PGh0bWwgeG1sbnM6bz0ndXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6b2ZmaWNlJyB4bWxuczp3PSd1cm46c2NoZW1hcy1taWNyb3NvZnQtY29tOm9mZmljZTp3b3JkJyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvVFIvUkVDLWh0bWw0MCc+PGhlYWQ+PG1ldGEgY2hhcnNldD0ndXRmLTgnPjx0aXRsZT5DVjwvdGl0bGU+PHN0eWxlPkBwYWdlIFdvcmRTZWN0aW9uMSB7IHNpemU6IDU5NS4zcHQgODQxLjlwdDsgbWFyZ2luOiA1Ni43cHQgNTYuN3B0IDU2LjdwdCA1Ni43cHQ7IH0gZGl2LldvcmRTZWN0aW9uMSB7IHBhZ2U6IFdvcmRTZWN0aW9uMTsgfSBib2R5IHsgZm9udC1mYW1pbHk6ICdUaW1lcyBOZXcgUm9tYW4nLCBUaW1lcywgc2VyaWY7IGZvbnQtc2l6ZTogMTRweDsgbGluZS1oZWlnaHQ6IDEuNTsgY29sb3I6ICMwMDA7IH0gaW1nIHsgbWF4LXdpZHRoOiAxMDAlOyB9PC9zdHlsZT48L2hlYWQ+PGJvZHk+PGRpdiBjbGFzcz0nV29yZFNlY3Rpb24xJz4=");
+              const footer = atob("PC9kaXY+PC9ib2R5PjwvaHRtbD4=");
+              const blob = new Blob(['\ufeff', header + combinedHtml + footer], { type: 'application/msword' });
+              const url = URL.createObjectURL(blob); const link = document.createElement('A'); link.href = url; link.download = 'Batch_CV_PoC_StarCore.doc'; document.body.appendChild(link); link.click(); document.body.removeChild(link);
+              Toast.fire({ icon: 'success', title: 'Batch Word Berhasil Diunduh!' });
+          } else { showElegantAlert('error', 'Gagal', 'Data tidak ditemukan.'); }
+      } catch(e) { showElegantAlert('error', 'Error', 'Gagal memproses Batch Export.'); } finally { btn.innerHTML = origHtml; btn.disabled = false; }
+  }
+
   async function translateForm() {
-    const btn = document.getElementById('btnTranslate');
-    const originalHTML = btn.innerHTML;
-    
+    const btn = document.getElementById('btnTranslate'); const originalHTML = btn.innerHTML;
     if (isEnglish) {
         btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> Mengembalikan Teks Asli...'; btn.disabled = true;
         setTimeout(() => {
@@ -325,17 +405,12 @@
             isEnglish = false; updatePreview(); btn.innerHTML = '<i class="fa-solid fa-language text-primary me-1"></i> Translate to English'; btn.disabled = false; Toast.fire({ icon: 'success', title: 'Dikembalikan ke Teks Asli (Indonesia)!' });
         }, 500); return;
     }
-
     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> Sedang Menerjemahkan (Tunggu Sebentar)...'; btn.disabled = true;
-
     let workData = []; document.querySelectorAll('#workExpContainer .dynamic-box').forEach(box => { workData.push({ period: box.querySelector('.work-period').value, company: box.querySelector('.work-company').value, role: box.querySelector('.work-role').value, desc: box.querySelector('.work-desc').value }); });
     let projData = []; document.querySelectorAll('#projExpContainer .dynamic-box').forEach(box => { projData.push({ year: box.querySelector('.proj-year').value, client: box.querySelector('.proj-client').value, role: box.querySelector('.proj-role').value, desc: box.querySelector('.proj-desc').value }); });
     let certsData = []; document.querySelectorAll('#certContainer .dynamic-box').forEach(box => { certsData.push({ no: box.querySelector('.cert-no').value, field: box.querySelector('.cert-field').value, date: box.querySelector('.cert-date').value, expiry: box.querySelector('.cert-expiry').value }); });
-
     let dataToTranslate = { roleTitle: document.getElementById('roleTitle').value, education: document.getElementById('education').value, workExps: workData, projExps: projData, certs: certsData };
-
     originalCVDataCache = JSON.parse(JSON.stringify(dataToTranslate)); let isSuccess = false; 
-
     try {
       const res = await fetchAPI('translateData', { dataToTranslate: dataToTranslate, targetLang: 'en' });
       if (res.status === 'success') {
@@ -344,9 +419,7 @@
           document.getElementById('workExpContainer').innerHTML = ''; workExpCount = 0; if(translated.workExps.length > 0) { translated.workExps.forEach(w => { addWorkExp(); const box = document.querySelectorAll('#workExpContainer .dynamic-box')[document.querySelectorAll('#workExpContainer .dynamic-box').length - 1]; box.querySelector('.work-period').value = w.period; box.querySelector('.work-company').value = w.company; box.querySelector('.work-role').value = w.role; box.querySelector('.work-desc').value = w.desc; }); } else { addWorkExp(); }
           document.getElementById('projExpContainer').innerHTML = ''; projExpCount = 0; if(translated.projExps.length > 0) { translated.projExps.forEach(p => { addProjExp(); const box = document.querySelectorAll('#projExpContainer .dynamic-box')[document.querySelectorAll('#projExpContainer .dynamic-box').length - 1]; box.querySelector('.proj-year').value = p.year; box.querySelector('.proj-client').value = p.client; box.querySelector('.proj-role').value = p.role; box.querySelector('.proj-desc').value = p.desc; }); } else { addProjExp(); }
           document.getElementById('certContainer').innerHTML = ''; certCount = 0; if(translated.certs.length > 0) { translated.certs.forEach(c => { addCert(); const box = document.querySelectorAll('#certContainer .dynamic-box')[document.querySelectorAll('#certContainer .dynamic-box').length - 1]; box.querySelector('.cert-no').value = c.no; box.querySelector('.cert-field').value = c.field; box.querySelector('.cert-date').value = c.date; box.querySelector('.cert-expiry').value = c.expiry; }); } else { addCert(); }
-          updatePreview(); 
-          btn.innerHTML = '<i class="fa-solid fa-clock-rotate-left text-danger me-1"></i> Kembali ke Teks Asli (Indonesia)';
-          Toast.fire({ icon: 'success', title: 'Terjemahan ke Inggris Selesai!' });
+          updatePreview(); btn.innerHTML = '<i class="fa-solid fa-clock-rotate-left text-danger me-1"></i> Kembali ke Teks Asli (Indonesia)'; Toast.fire({ icon: 'success', title: 'Terjemahan ke Inggris Selesai!' });
       } else { showElegantAlert('error', 'Gagal dari Server', res.message || 'Terjadi kesalahan saat menerjemahkan.'); }
     } catch (e) { showElegantAlert('error', 'Error Jaringan', 'Koneksi ke API Terputus. Pastikan Code.gs sudah di Deploy ulang.'); } finally { btn.disabled = false; if(!isSuccess) { btn.innerHTML = originalHTML; } }
   }
@@ -413,10 +486,7 @@
       document.getElementById(inputContId).querySelector('input[type="file"]').value = ""; updatePreview();
   }
 
-  function setFileBadge(prefix) {
-      document.getElementById(`input-container-${prefix}`).classList.add('d-none');
-      document.getElementById(`success-container-${prefix}`).classList.remove('d-none');
-  }
+  function setFileBadge(prefix) { document.getElementById(`input-container-${prefix}`).classList.add('d-none'); document.getElementById(`success-container-${prefix}`).classList.remove('d-none'); }
 
   function handleLampiranBase64(event, imgId, inputContId, succContId) { 
       const file = event.target.files[0]; const imgEl = document.getElementById(imgId); 
@@ -424,7 +494,6 @@
       const reader = new FileReader(); reader.onload = function(e) { const img = new Image(); img.onload = function() { const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d'); let width = img.width; let height = img.height; const MAX_WIDTH = 800; const MAX_HEIGHT = 1000; if (width > height) { if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; } } else { if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; } } canvas.width = width; canvas.height = height; ctx.drawImage(img, 0, 0, width, height); const dataUrl = canvas.toDataURL('image/jpeg', 0.6); imgEl.src = dataUrl; imgEl.classList.remove('d-none'); document.getElementById(inputContId).classList.add('d-none'); document.getElementById(succContId).classList.remove('d-none'); updatePreview(); }; img.src = e.target.result; }; reader.readAsDataURL(file); 
   }
   
-  // PERBAIKAN: MEMBUAT GAMBAR PREVIEW BISA DIKLIK MENGARAH KE GOOGLE DRIVE
   function rebuildGallery(type) { 
       let galleryId = `lampiran-${type}-gallery`; let areaId = `lampiran-${type}-area`; let imgClass = `lampiran-data-${type}`; 
       const gallery = document.getElementById(galleryId); gallery.innerHTML = ''; let hasImages = false; 
@@ -433,23 +502,10 @@
           let src = img.src; 
           if(src && (src.startsWith('data:image') || src.startsWith('http'))) { 
               hasImages = true; 
-              
-              // Membuat tag <a> untuk membuat link yang bisa diklik
-              const linkWrapper = document.createElement('a');
-              linkWrapper.href = src; // Gunakan link sumber gambar
-              linkWrapper.target = '_blank'; // Buka di tab baru
-              linkWrapper.style.display = 'block';
-              linkWrapper.style.textDecoration = 'none';
-
-              const newImg = document.createElement('img'); newImg.src = src; 
-              newImg.setAttribute('width', '600'); newImg.style.width = '100%'; newImg.style.maxWidth = '600px'; 
-              newImg.style.marginBottom = '20px'; newImg.style.display = 'block'; newImg.style.marginLeft = 'auto'; newImg.style.marginRight = 'auto';
-              
-              // Tambahkan kelas CSS agar ada efek hover dan cursor pointer
+              const linkWrapper = document.createElement('a'); linkWrapper.href = src; linkWrapper.target = '_blank'; linkWrapper.style.display = 'block'; linkWrapper.style.textDecoration = 'none';
+              const newImg = document.createElement('img'); newImg.src = src; newImg.setAttribute('width', '600'); newImg.style.width = '100%'; newImg.style.maxWidth = '600px'; newImg.style.marginBottom = '20px'; newImg.style.display = 'block'; newImg.style.marginLeft = 'auto'; newImg.style.marginRight = 'auto';
               newImg.classList.add('clickable-preview');
-
-              linkWrapper.appendChild(newImg);
-              gallery.appendChild(linkWrapper); 
+              linkWrapper.appendChild(newImg); gallery.appendChild(linkWrapper); 
           } 
       }); 
       document.getElementById(areaId).style.display = hasImages ? 'block' : 'none'; 
@@ -462,15 +518,8 @@
   function removeElement(id) { document.getElementById(id).remove(); updatePreview(); }
 
   function updatePreview() {
-    document.getElementById('lbl-edu').innerText = isEnglish ? "Education" : "Pendidikan";
-    document.getElementById('lbl-work').innerText = isEnglish ? "Work Experience" : "Pengalaman Kerja";
-    document.getElementById('lbl-proj').innerText = isEnglish ? "Project Experience" : "Pengalaman Project";
-    document.getElementById('lbl-cert').innerText = isEnglish ? "Professional Certification" : "Sertifikat Profesi/Kompetensi";
-    
-    document.getElementById('lbl-lamp-ijazah').innerText = isEnglish ? "DEGREE ATTACHMENT" : "LAMPIRAN IJAZAH";
-    document.getElementById('lbl-lamp-cert').innerText = isEnglish ? "CERTIFICATION ATTACHMENT" : "LAMPIRAN SERTIFIKAT";
-    document.getElementById('lbl-lamp-ktp').innerText = isEnglish ? "ID CARD ATTACHMENT" : "LAMPIRAN KTP";
-    document.getElementById('lbl-lamp-npwp').innerText = isEnglish ? "TAX ID ATTACHMENT" : "LAMPIRAN NPWP";
+    document.getElementById('lbl-edu').innerText = isEnglish ? "Education" : "Pendidikan"; document.getElementById('lbl-work').innerText = isEnglish ? "Work Experience" : "Pengalaman Kerja"; document.getElementById('lbl-proj').innerText = isEnglish ? "Project Experience" : "Pengalaman Project"; document.getElementById('lbl-cert').innerText = isEnglish ? "Professional Certification" : "Sertifikat Profesi/Kompetensi";
+    document.getElementById('lbl-lamp-ijazah').innerText = isEnglish ? "DEGREE ATTACHMENT" : "LAMPIRAN IJAZAH"; document.getElementById('lbl-lamp-cert').innerText = isEnglish ? "CERTIFICATION ATTACHMENT" : "LAMPIRAN SERTIFIKAT"; document.getElementById('lbl-lamp-ktp').innerText = isEnglish ? "ID CARD ATTACHMENT" : "LAMPIRAN KTP"; document.getElementById('lbl-lamp-npwp').innerText = isEnglish ? "TAX ID ATTACHMENT" : "LAMPIRAN NPWP";
 
     const t_period = isEnglish ? "Period" : "Periode"; const t_company = isEnglish ? "Company" : "Perusahaan"; const t_role = isEnglish ? "Role/Position" : "Posisi"; const t_desc = isEnglish ? "Description" : "Deskripsi"; const t_year = isEnglish ? "Year" : "Tahun"; const t_client = isEnglish ? "Client / Project" : "Klien / Project"; const t_certNo = isEnglish ? "Certificate No." : "Nomor Sertifikat"; const t_certField = isEnglish ? "Field of Competency" : "Bidang Profesi"; const t_date = isEnglish ? "Issue Date" : "Tanggal Terbit"; const t_expiry = isEnglish ? "Valid Until" : "Masa Berlaku";
 
@@ -493,14 +542,11 @@
     rebuildGallery('ijazah'); rebuildGallery('sertifikat'); rebuildGallery('ktp'); rebuildGallery('npwp');
   }
 
-  function downloadPDF() {
-    Swal.fire({ title: 'Perhatian untuk Cetak PDF', html: 'Pastikan untuk <b>HAPUS CENTANG</b> pada opsi <b>"Headers and footers"</b> di menu setelan agar tulisan URL hilang.', icon: 'info', confirmButtonText: 'Mengerti, Cetak', confirmButtonColor: '#15a362' }).then((result) => { if(result.isConfirmed) { setTimeout(() => { window.print(); }, 500); } });
-  }
+  function downloadPDF() { Swal.fire({ title: 'Perhatian untuk Cetak PDF', html: 'Pastikan untuk <b>HAPUS CENTANG</b> pada opsi <b>"Headers and footers"</b> di menu setelan agar tulisan URL hilang.', icon: 'info', confirmButtonText: 'Mengerti, Cetak', confirmButtonColor: '#15a362' }).then((result) => { if(result.isConfirmed) { setTimeout(() => { window.print(); }, 500); } }); }
 
   function downloadWord() {
     Toast.fire({ icon: 'info', title: 'Menyiapkan file Word...' }); const cvHtml = document.getElementById('cv-document').innerHTML; const header = atob("PGh0bWwgeG1sbnM6bz0ndXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6b2ZmaWNlJyB4bWxuczp3PSd1cm46c2NoZW1hcy1taWNyb3NvZnQtY29tOm9mZmljZTp3b3JkJyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvVFIvUkVDLWh0bWw0MCc+PGhlYWQ+PG1ldGEgY2hhcnNldD0ndXRmLTgnPjx0aXRsZT5DVjwvdGl0bGU+PHN0eWxlPkBwYWdlIFdvcmRTZWN0aW9uMSB7IHNpemU6IDU5NS4zcHQgODQxLjlwdDsgbWFyZ2luOiA1Ni43cHQgNTYuN3B0IDU2LjdwdCA1Ni43cHQ7IH0gZGl2LldvcmRTZWN0aW9uMSB7IHBhZ2U6IFdvcmRTZWN0aW9uMTsgfSBib2R5IHsgZm9udC1mYW1pbHk6ICdUaW1lcyBOZXcgUm9tYW4nLCBUaW1lcywgc2VyaWY7IGZvbnQtc2l6ZTogMTRweDsgbGluZS1oZWlnaHQ6IDEuNTsgY29sb3I6ICMwMDA7IH0gaW1nIHsgbWF4LXdpZHRoOiAxMDAlOyB9PC9zdHlsZT48L2hlYWQ+PGJvZHk+PGRpdiBjbGFzcz0nV29yZFNlY3Rpb24xJz4="); const footer = atob("PC9kaXY+PC9ib2R5PjwvaHRtbD4="); const html = header + cvHtml + footer; const blob = new Blob(['\ufeff', html], { type: 'application/msword' }); const url = URL.createObjectURL(blob); const link = document.createElement('A'); link.href = url; const name = document.getElementById('name').value || 'CV'; link.download = 'CV_' + name.replace(/\s+/g, '_') + '.doc'; document.body.appendChild(link); link.click(); document.body.removeChild(link); Toast.fire({ icon: 'success', title: 'Word Berhasil Diunduh!' });
   }
 </script>
-
 </body>
 </html>
