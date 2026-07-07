@@ -11,7 +11,6 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <!-- WAJIB DITAMBAHKAN: Bootstrap JS Bundle untuk Modal Pop-up -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   
   <style>
@@ -64,7 +63,7 @@
 <body>
 
   <div id="loginPage" class="premium-login-wrapper">
-    <div class="logo-text-top">starcore<span class="logo-badge">.co</span><br><span style="font-size: 12px; color: #6c757d; font-weight: 500;">v18.0 Batch Preview Edition</span></div>
+    <div class="logo-text-top">starcore<span class="logo-badge">.co</span><br><span style="font-size: 12px; color: #6c757d; font-weight: 500;">v18.1 Dynamic Role PoC</span></div>
     <div class="login-card text-center">
       <h1 class="login-title">STARCORE</h1><div class="login-subtitle">Premium CV Builder Application</div><p class="login-desc">Welcome! Please login to your account.</p>
       <div class="mb-3"><label class="input-label">Username</label><input type="text" id="loginUsername" class="elegant-input" placeholder="Enter your Username" required></div>
@@ -97,7 +96,7 @@
               
               <div class="form-card mb-4" style="border-top: 4px solid #0dcaf0;">
                 <h5 class="fw-bold mb-3"><i class="fa-solid fa-briefcase text-info"></i> Batch Export PoC</h5>
-                <p class="text-muted" style="font-size:12px; line-height: 1.3;">Gabungkan banyak CV menjadi satu file Word. Centang lampiran yang diizinkan untuk PoC ini.</p>
+                <p class="text-muted" style="font-size:12px; line-height: 1.3;">Gabungkan banyak CV menjadi satu file Word. Centang lampiran yang diizinkan, dan edit posisi tim sesuai kebutuhan PoC ini.</p>
                 <div class="mb-3">
                   <label class="input-label">Pilih Lampiran yang Disertakan:</label>
                   <div class="p-2 border rounded" style="background:#fdfdfd; font-size:13px;">
@@ -108,22 +107,19 @@
                   </div>
                 </div>
                 <div class="mb-3">
-                  <label class="input-label">Pilih Anggota Tim:</label>
-                  <div id="pocUserList" class="p-2 border rounded" style="max-height: 120px; overflow-y: auto; background:#fdfdfd; font-size:13px;">
-                     <!-- List Checkbox User akan muncul di sini -->
-                  </div>
+                  <label class="input-label">Pilih & Edit Anggota Tim:</label>
+                  <div id="pocUserList" class="p-2 border rounded" style="max-height: 250px; overflow-y: auto; background:#fdfdfd; font-size:13px;">
+                     </div>
                 </div>
-                <!-- Tombol ini sekarang memanggil fitur Preview, bukan langsung Download -->
                 <button class="btn btn-info text-white w-100 fw-bold shadow-sm" id="btnPocExport" onclick="previewBatchPoC()"><i class="fa-solid fa-eye"></i> Preview & Generate CV</button>
               </div>
           </div>
           
-          <div class="col-md-8"><div class="form-card"><div class="d-flex justify-content-between mb-3"><h5 class="fw-bold"><i class="fa-solid fa-users text-primary"></i> Kelola Pengguna</h5><button class="btn btn-sm btn-light border" onclick="loadUsers()"><i class="fa-solid fa-rotate-right"></i> Refresh</button></div><div class="table-responsive"><table class="table table-hover align-middle"><thead class="table-light"><tr><th>Username</th><th>Role</th><th class="text-center">Aksi</th></tr></thead><tbody id="userTableBody"><tr><td colspan="3" class="text-center text-muted">Mengambil data...</td></tr></tbody></table></div></div></div>
+          <div class="col-md-8"><div class="form-card"><div class="d-flex justify-content-between mb-3"><h5 class="fw-bold"><i class="fa-solid fa-users text-primary"></i> Kelola Pengguna</h5><button class="btn btn-sm btn-light border" onclick="loadUsers()"><i class="fa-solid fa-rotate-right"></i> Refresh</button></div><div class="table-responsive"><table class="table table-hover align-middle"><thead class="table-light"><tr><th>Username</th><th>Role System</th><th class="text-center">Aksi</th></tr></thead><tbody id="userTableBody"><tr><td colspan="3" class="text-center text-muted">Mengambil data...</td></tr></tbody></table></div></div></div>
         </div>
       </div>
 
       <div id="cvSection" class="row">
-        <!-- FORM KIRI -->
         <div class="col-lg-5 mb-4" style="height: 83vh; overflow-y: auto; padding-right: 15px;">
           <div class="form-card">
             <h4 id="cvTitleHeader" class="mb-4 fw-bold" style="color: #1b7a43;">Data CV Profesional</h4>
@@ -169,7 +165,6 @@
           </div>
         </div>
 
-        <!-- PREVIEW KANAN -->
         <div class="col-lg-7" style="height: 83vh; overflow-y: auto;">
           <div class="d-flex justify-content-between align-items-center mb-3 sticky-top bg-white p-3 rounded shadow-sm border">
             <h5 class="fw-bold m-0" style="color: #1b7a43;">Preview Dokumen CV</h5>
@@ -210,7 +205,6 @@
     </div>
   </div>
 
-  <!-- MODAL POP-UP PREVIEW BATCH CV -->
   <div class="modal fade" id="previewBatchModal" tabindex="-1" aria-labelledby="previewBatchModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
       <div class="modal-content">
@@ -219,13 +213,10 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body" style="background-color: #e9ecef; padding: 20px;">
-           <div id="batchPreviewContent" class="cv-paper" style="margin: 0 auto;">
-               <!-- Konten Preview HTML akan disuntikkan ke sini -->
-           </div>
+           <div id="batchPreviewContent" class="cv-paper" style="margin: 0 auto;"></div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-          <!-- Tombol Download dipindah ke sini -->
           <button type="button" class="btn btn-info text-white fw-bold shadow-sm" onclick="executeBatchDownload()"><i class="fa-solid fa-file-word"></i> Unduh File Word Ini</button>
         </div>
       </div>
@@ -236,7 +227,7 @@
   // ==========================================
   // PENGATURAN API GOOGLE APPS SCRIPT
   // ==========================================
-  const API_URL = "https://script.google.com/macros/s/AKfycbyUY9nW3IYaQCDnncHxT7yokz_jkUeJtXYzynt-9Erh_5nIgzRBA_dJsubR29KMOinW/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbxJLfkdNYAUTIMtatTYYDsuVRqhpQIeGwR06bKeymk_hHsgyMjDQy0BIaQsbk-exCEn/exec";
   
   const Toast = Swal.mixin({ toast: true, position: 'top-end', showConfirmButton: false, timer: 3000, timerProgressBar: true });
   function showElegantAlert(type, title, text) { Swal.fire({ icon: type, title: title, text: text, confirmButtonColor: '#15a362', confirmButtonText: 'Mengerti' }); }
@@ -245,7 +236,7 @@
   let certCount = 0; let workExpCount = 0; let projExpCount = 0; 
   let ijazahCount = 0; let lampSertCount = 0; let ktpCount = 0; let npwpCount = 0; 
   let isEnglish = false; let originalCVDataCache = null; 
-  let currentBatchHtml = ""; // Variabel penampung HTML Gabungan CV
+  let currentBatchHtml = ""; 
 
   async function fetchAPI(actionName, payloadData = {}) {
     if(API_URL.includes("ISI_DENGAN_URL")) { showElegantAlert('error', 'Error API', 'URL API belum dimasukkan di dalam script.'); throw new Error("Missing API URL"); }
@@ -269,13 +260,34 @@
     } catch (e) { document.getElementById("loginMsg").innerText = "Gagal menghubungi server."; document.getElementById("loginMsg").className = "text-danger mt-3 fw-bold"; } finally { document.getElementById("btnLogin").disabled = false; }
   }
 
+  // FUNGSI BARU: TOGGLE MUNCULKAN INPUT EDIT JABATAN
+  function togglePocRoleInput(username) {
+      const inputEl = document.getElementById('poc-role-' + username);
+      const cbEl = document.getElementById('poc-' + username);
+      if (cbEl.checked) {
+          inputEl.classList.remove('d-none');
+      } else {
+          inputEl.classList.add('d-none');
+      }
+  }
+
   async function loadUsers() {
     document.getElementById("userTableBody").innerHTML = '<tr><td colspan="3" class="text-center text-muted">Mengambil data dari server...</td></tr>';
     try {
       const res = await fetchAPI('getAdminData'); let html = ""; let pocListHtml = "";
       res.data.forEach(row => { 
-          let targetUser = row[0]; let btnHapus = targetUser === currentUser ? `<span class="badge bg-secondary">Akun Anda</span>` : `<button class="btn btn-sm btn-outline-danger" onclick="removeUser('${targetUser}')"><i class="fa-solid fa-trash"></i></button>`; let roleBadge = row[1] === 'Admin' ? `<span class="badge bg-primary">${row[1]}</span>` : `<span class="badge bg-light text-dark border">${row[1]}</span>`; let btnLihat = `<button class="btn btn-sm btn-info text-white me-2" onclick="adminViewCV('${targetUser}')"><i class="fa-solid fa-eye"></i> Lihat CV</button>`; html += `<tr><td class="fw-semibold">${targetUser}</td><td>${roleBadge}</td><td class="text-center">${btnLihat}${btnHapus}</td></tr>`; 
-          pocListHtml += `<div class="form-check"><input class="form-check-input poc-user-cb" type="checkbox" value="${targetUser}" id="poc-${targetUser}"><label class="form-check-label text-dark fw-medium" for="poc-${targetUser}">${targetUser} (${row[1]})</label></div>`;
+          let targetUser = row[0]; let sysRole = row[1]; let cvRole = row[2]; // Index 2 adalah Jabatan CV asli
+          let btnHapus = targetUser === currentUser ? `<span class="badge bg-secondary">Akun Anda</span>` : `<button class="btn btn-sm btn-outline-danger" onclick="removeUser('${targetUser}')"><i class="fa-solid fa-trash"></i></button>`; let roleBadge = sysRole === 'Admin' ? `<span class="badge bg-primary">${sysRole}</span>` : `<span class="badge bg-light text-dark border">${sysRole}</span>`; let btnLihat = `<button class="btn btn-sm btn-info text-white me-2" onclick="adminViewCV('${targetUser}')"><i class="fa-solid fa-eye"></i> Lihat CV</button>`; html += `<tr><td class="fw-semibold">${targetUser}</td><td>${roleBadge}</td><td class="text-center">${btnLihat}${btnHapus}</td></tr>`; 
+          
+          // PEMBARUAN: List PoC sekarang memiliki input dinamis
+          pocListHtml += `
+          <div class="mb-2 p-2 border rounded" style="background:#fff;">
+              <div class="form-check">
+                  <input class="form-check-input poc-user-cb" type="checkbox" value="${targetUser}" id="poc-${targetUser}" onchange="togglePocRoleInput('${targetUser}')">
+                  <label class="form-check-label text-dark fw-bold" for="poc-${targetUser}">${targetUser}</label>
+              </div>
+              <input type="text" class="form-control form-control-sm mt-2 d-none poc-role-input" id="poc-role-${targetUser}" value="${cvRole}" placeholder="Ubah Jabatan/Posisi (PoC)">
+          </div>`;
       }); 
       document.getElementById("userTableBody").innerHTML = html;
       document.getElementById("pocUserList").innerHTML = pocListHtml;
@@ -320,6 +332,7 @@
         document.getElementById('workExpContainer').innerHTML = ''; workExpCount = 0; if (res.workExps && res.workExps.length > 0) { res.workExps.forEach(w => { addWorkExp(); const boxes = document.querySelectorAll('#workExpContainer .dynamic-box'); const box = boxes[boxes.length - 1]; box.querySelector('.work-period').value = w.period || ""; box.querySelector('.work-company').value = w.company || ""; box.querySelector('.work-role').value = w.role || ""; box.querySelector('.work-desc').value = w.desc || ""; }); } else { addWorkExp(); }
         document.getElementById('projExpContainer').innerHTML = ''; projExpCount = 0; if (res.projExps && res.projExps.length > 0) { res.projExps.forEach(p => { addProjExp(); const boxes = document.querySelectorAll('#projExpContainer .dynamic-box'); const box = boxes[boxes.length - 1]; box.querySelector('.proj-year').value = p.year || ""; box.querySelector('.proj-client').value = p.client || ""; box.querySelector('.proj-role').value = p.role || ""; box.querySelector('.proj-desc').value = p.desc || ""; }); } else { addProjExp(); }
         document.getElementById('certContainer').innerHTML = ''; certCount = 0; if (res.certs && res.certs.length > 0) { res.certs.forEach(c => { addCert(); const boxes = document.querySelectorAll('#certContainer .dynamic-box'); const box = boxes[boxes.length - 1]; box.querySelector('.cert-no').value = c.no || ""; box.querySelector('.cert-field').value = c.field || ""; box.querySelector('.cert-date').value = c.date || ""; box.querySelector('.cert-expiry').value = c.expiry || ""; }); } else { addCert(); }
+        
         isEnglish = false; originalCVDataCache = null; document.getElementById('btnTranslate').innerHTML = '<i class="fa-solid fa-language text-primary me-1"></i> Translate to English'; updatePreview(); 
       } else { document.getElementById('name').value = ""; document.getElementById('workExpContainer').innerHTML = ''; workExpCount = 0; addWorkExp(); document.getElementById('projExpContainer').innerHTML = ''; projExpCount = 0; addProjExp(); document.getElementById('certContainer').innerHTML = ''; certCount = 0; addCert(); addLampiran('ijazah'); addLampiran('sertifikat'); addLampiran('ktp'); addLampiran('npwp'); updatePreview(); }
     } catch(e) { document.getElementById('name').value = ""; showElegantAlert('error', 'Gagal', 'Terjadi kesalahan jaringan.'); addLampiran('ijazah'); addLampiran('sertifikat'); addLampiran('ktp'); addLampiran('npwp'); updatePreview(); }
@@ -342,12 +355,23 @@
   }
 
   // ==========================================
-  // UPDATE LOGIKA: PREVIEW BATCH EXPORT PoC SEBELUM DOWNLOAD
+  // PERBAIKAN LOGIKA: APPLY DYNAMIC ROLE SAAT GENERATE PREVIEW
   // ==========================================
   async function previewBatchPoC() {
-      const selectedUsers = Array.from(document.querySelectorAll('.poc-user-cb:checked')).map(cb => cb.value);
-      if(selectedUsers.length === 0) return showElegantAlert('warning', 'Oops', 'Pilih minimal satu anggota tim untuk PoC.');
+      // 1. Kumpulkan User yang dicentang beserta data Jabatannya yang telah diedit
+      const selectedCbElements = Array.from(document.querySelectorAll('.poc-user-cb:checked'));
+      if(selectedCbElements.length === 0) return showElegantAlert('warning', 'Oops', 'Pilih minimal satu anggota tim untuk PoC.');
       
+      let customRolesMap = {};
+      let selectedUsernames = [];
+      
+      selectedCbElements.forEach(cb => {
+          let user = cb.value;
+          selectedUsernames.push(user);
+          // Ambil nilai dari kotak input teks di bawahnya
+          customRolesMap[user] = document.getElementById('poc-role-' + user).value;
+      });
+
       const incIjazah = document.getElementById('pocIncIjazah').checked;
       const incSertifikat = document.getElementById('pocIncSertifikat').checked;
       const incKtp = document.getElementById('pocIncKtp').checked;
@@ -357,13 +381,17 @@
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> Merajut Dokumen...'; btn.disabled = true;
 
       try {
-          const res = await fetchAPI('getBatchCVData', { usernames: selectedUsers });
+          // Tarik data dari Database Google Script
+          const res = await fetchAPI('getBatchCVData', { usernames: selectedUsernames });
           if(res.status === 'success' && res.data.length > 0) {
               let combinedHtml = "";
               const formatList = (text) => text.split('\n').filter(l => l.trim() !== '').map(l => `<li style="margin-bottom: 4px; font-family: 'Times New Roman', Times, serif;">${l}</li>`).join('');
               
               res.data.forEach((user, index) => {
                   let eduText = (user.education || "-").replace(/\n/g, '<br>');
+                  
+                  // 2. GANTI JABATAN ASLI DENGAN JABATAN CUSTOM DARI INPUT
+                  let finalRole = customRolesMap[user.username] || user.roleTitle || "-";
                   
                   let workHtml = ""; user.workExps.forEach((w, i) => { workHtml += `<table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 15px; border-collapse: collapse;"><tr><td width="25" valign="top" style="width: 25px; font-weight: bold;">${i + 1}.</td><td valign="top"><table width="100%" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse;"><tr><td width="140" valign="top" style="width: 140px; padding-bottom: 4px;">Periode</td><td width="15" valign="top" align="center" style="width: 15px; padding-bottom: 4px;">:</td><td valign="top" style="padding-bottom: 4px;">${w.period}</td></tr><tr><td width="140" valign="top" style="width: 140px; padding-bottom: 4px;">Perusahaan</td><td width="15" valign="top" align="center" style="width: 15px; padding-bottom: 4px;">:</td><td valign="top" style="padding-bottom: 4px;">${w.company}</td></tr><tr><td width="140" valign="top" style="width: 140px; padding-bottom: 4px;">Posisi</td><td width="15" valign="top" align="center" style="width: 15px; padding-bottom: 4px;">:</td><td valign="top" style="padding-bottom: 4px;">${w.role}</td></tr><tr><td width="140" valign="top" style="width: 140px; padding-bottom: 4px;">Deskripsi</td><td width="15" valign="top" align="center" style="width: 15px; padding-bottom: 4px;">:</td><td valign="top" style="padding-bottom: 4px;"><ul style="margin: 0; padding-left: 20px;">${formatList(w.desc)}</ul></td></tr></table></td></tr></table>`; });
                   
@@ -389,7 +417,7 @@
                             <td valign="middle" align="center" style="padding: 0 10px; text-align: center;">
                               <h2 style="margin: 0 0 8px 0; font-size: 18px; font-weight: bold; font-style: italic;">Curriculum Vitae (CV)</h2>
                               <h1 style="margin: 0 0 8px 0; font-size: 24px; font-weight: bold;">${user.name || "-"}</h1>
-                              <h3 style="margin: 0; font-size: 16px; font-weight: bold; font-style: italic;">${user.roleTitle || "-"}</h3>
+                              <h3 style="margin: 0; font-size: 16px; font-weight: bold; font-style: italic;">${finalRole}</h3>
                             </td>
                             <td width="115" valign="top" style="width: 115px;">&nbsp;</td>
                           </tr>
@@ -407,10 +435,7 @@
                   `;
               });
 
-              // Simpan HTML Gabungan ke variabel global
               currentBatchHtml = combinedHtml;
-              
-              // Suntikkan ke Modal dan Tampilkan
               document.getElementById('batchPreviewContent').innerHTML = currentBatchHtml;
               const previewModal = new bootstrap.Modal(document.getElementById('previewBatchModal'));
               previewModal.show();
@@ -419,19 +444,12 @@
       } catch(e) { showElegantAlert('error', 'Error', 'Gagal memproses Batch Preview.'); } finally { btn.innerHTML = origHtml; btn.disabled = false; }
   }
 
-  // LOGIKA BARU: Eksekusi Download dari Dalam Modal Pop-up
   function executeBatchDownload() {
       Toast.fire({ icon: 'info', title: 'Menyiapkan file Word...' });
       const header = atob("PGh0bWwgeG1sbnM6bz0ndXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6b2ZmaWNlJyB4bWxuczp3PSd1cm46c2NoZW1hcy1taWNyb3NvZnQtY29tOm9mZmljZTp3b3JkJyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvVFIvUkVDLWh0bWw0MCc+PGhlYWQ+PG1ldGEgY2hhcnNldD0ndXRmLTgnPjx0aXRsZT5DVjwvdGl0bGU+PHN0eWxlPkBwYWdlIFdvcmRTZWN0aW9uMSB7IHNpemU6IDU5NS4zcHQgODQxLjlwdDsgbWFyZ2luOiA1Ni43cHQgNTYuN3B0IDU2LjdwdCA1Ni43cHQ7IH0gZGl2LldvcmRTZWN0aW9uMSB7IHBhZ2U6IFdvcmRTZWN0aW9uMTsgfSBib2R5IHsgZm9udC1mYW1pbHk6ICdUaW1lcyBOZXcgUm9tYW4nLCBUaW1lcywgc2VyaWY7IGZvbnQtc2l6ZTogMTRweDsgbGluZS1oZWlnaHQ6IDEuNTsgY29sb3I6ICMwMDA7IH0gaW1nIHsgbWF4LXdpZHRoOiAxMDAlOyB9PC9zdHlsZT48L2hlYWQ+PGJvZHk+PGRpdiBjbGFzcz0nV29yZFNlY3Rpb24xJz4=");
       const footer = atob("PC9kaXY+PC9ib2R5PjwvaHRtbD4=");
       const blob = new Blob(['\ufeff', header + currentBatchHtml + footer], { type: 'application/msword' });
-      const url = URL.createObjectURL(blob); 
-      const link = document.createElement('A'); 
-      link.href = url; 
-      link.download = 'Batch_CV_PoC_StarCore.doc'; 
-      document.body.appendChild(link); 
-      link.click(); 
-      document.body.removeChild(link);
+      const url = URL.createObjectURL(blob); const link = document.createElement('A'); link.href = url; link.download = 'Batch_CV_PoC_StarCore.doc'; document.body.appendChild(link); link.click(); document.body.removeChild(link);
       Toast.fire({ icon: 'success', title: 'Batch Word Berhasil Diunduh!' });
   }
 
@@ -496,64 +514,13 @@
   function showMyCV() { viewingUser = currentUser; document.getElementById('cvTitleHeader').innerHTML = `Data CV Profesional`; showSection('cvSection'); loadUserCVData(currentUser); }
   function adminViewCV(targetUser) { viewingUser = targetUser; document.getElementById('cvTitleHeader').innerHTML = `Data CV Profesional <span class="badge bg-warning text-dark fs-6 ms-2"><i class="fa-solid fa-eye"></i> Melihat CV: ${targetUser}</span>`; showSection('cvSection'); loadUserCVData(targetUser); }
 
-  function resetPasFoto() {
-      document.getElementById('photoBase64').value = ""; document.getElementById('prev-photo').style.display = 'none'; document.getElementById('photoPlaceholder').style.display = 'block';
-      document.getElementById('input-container-pasfoto').classList.remove('d-none'); document.getElementById('success-container-pasfoto').classList.add('d-none'); document.getElementById('pasFotoInput').value = "";
-  }
-
-  function processPhotoBase64(event) { 
-      const file = event.target.files[0]; if(!file) return; 
-      const reader = new FileReader(); reader.onload = function(e) { 
-          const img = new Image(); img.onload = function() { 
-              const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d'); const MAX_WIDTH = 300; const MAX_HEIGHT = 400; canvas.width = MAX_WIDTH; canvas.height = MAX_HEIGHT; ctx.drawImage(img, 0, 0, MAX_WIDTH, MAX_HEIGHT); 
-              const dataUrl = canvas.toDataURL('image/jpeg', 0.7); 
-              document.getElementById('photoBase64').value = dataUrl; document.getElementById('prev-photo').src = dataUrl; document.getElementById('prev-photo').style.display = 'block'; document.getElementById('photoPlaceholder').style.display = 'none'; 
-              document.getElementById('input-container-pasfoto').classList.add('d-none'); document.getElementById('success-container-pasfoto').classList.remove('d-none');
-          }; img.src = e.target.result; 
-      }; reader.readAsDataURL(file); 
-  }
-  
-  function addLampiran(type) { 
-      let containerId, prefix; 
-      if(type === 'ijazah') { ijazahCount++; prefix = `ijazah-${ijazahCount}`; containerId = 'ijazahContainer'; } else if(type === 'sertifikat') { lampSertCount++; prefix = `lampsert-${lampSertCount}`; containerId = 'lampSertifikatContainer'; } else if(type === 'ktp') { ktpCount++; prefix = `ktp-${ktpCount}`; containerId = 'ktpContainer'; } else if(type === 'npwp') { npwpCount++; prefix = `npwp-${npwpCount}`; containerId = 'npwpContainer'; } 
-      const html = `<div class="dynamic-box" id="box-${prefix}" style="padding:10px; background:#fff;"><button type="button" class="btn-remove" onclick="removeElement('box-${prefix}')"><i class="fa-solid fa-trash"></i></button>
-        <div id="input-container-${prefix}"><input type="file" class="elegant-input form-control-sm" accept="image/*" onchange="handleLampiranBase64(event, 'img-${prefix}', 'input-container-${prefix}', 'success-container-${prefix}')"></div>
-        <div id="success-container-${prefix}" class="d-none mt-2 p-2 bg-light rounded border text-center"><span class="badge bg-success mb-2"><i class="fa-solid fa-check-circle"></i> File Tersimpan</span><br><button type="button" class="btn btn-sm btn-outline-secondary" onclick="resetLampiran('img-${prefix}', 'input-container-${prefix}', 'success-container-${prefix}')"><i class="fa-solid fa-rotate"></i> Ganti File</button></div>
-        <img id="img-${prefix}" class="lampiran-data-${type} d-none mt-2 rounded shadow-sm mx-auto" style="max-height: 80px; border: 1px solid #eaeaea;">
-      </div>`; 
-      document.getElementById(containerId).insertAdjacentHTML('beforeend', html); 
-  }
-
-  function resetLampiran(imgId, inputContId, succContId) {
-      document.getElementById(imgId).removeAttribute('src'); document.getElementById(imgId).classList.add('d-none');
-      document.getElementById(inputContId).classList.remove('d-none'); document.getElementById(succContId).classList.add('d-none');
-      document.getElementById(inputContId).querySelector('input[type="file"]').value = ""; updatePreview();
-  }
-
+  function resetPasFoto() { document.getElementById('photoBase64').value = ""; document.getElementById('prev-photo').style.display = 'none'; document.getElementById('photoPlaceholder').style.display = 'block'; document.getElementById('input-container-pasfoto').classList.remove('d-none'); document.getElementById('success-container-pasfoto').classList.add('d-none'); document.getElementById('pasFotoInput').value = ""; }
+  function processPhotoBase64(event) { const file = event.target.files[0]; if(!file) return; const reader = new FileReader(); reader.onload = function(e) { const img = new Image(); img.onload = function() { const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d'); const MAX_WIDTH = 300; const MAX_HEIGHT = 400; canvas.width = MAX_WIDTH; canvas.height = MAX_HEIGHT; ctx.drawImage(img, 0, 0, MAX_WIDTH, MAX_HEIGHT); const dataUrl = canvas.toDataURL('image/jpeg', 0.7); document.getElementById('photoBase64').value = dataUrl; document.getElementById('prev-photo').src = dataUrl; document.getElementById('prev-photo').style.display = 'block'; document.getElementById('photoPlaceholder').style.display = 'none'; document.getElementById('input-container-pasfoto').classList.add('d-none'); document.getElementById('success-container-pasfoto').classList.remove('d-none'); }; img.src = e.target.result; }; reader.readAsDataURL(file); }
+  function addLampiran(type) { let containerId, prefix; if(type === 'ijazah') { ijazahCount++; prefix = `ijazah-${ijazahCount}`; containerId = 'ijazahContainer'; } else if(type === 'sertifikat') { lampSertCount++; prefix = `lampsert-${lampSertCount}`; containerId = 'lampSertifikatContainer'; } else if(type === 'ktp') { ktpCount++; prefix = `ktp-${ktpCount}`; containerId = 'ktpContainer'; } else if(type === 'npwp') { npwpCount++; prefix = `npwp-${npwpCount}`; containerId = 'npwpContainer'; } const html = `<div class="dynamic-box" id="box-${prefix}" style="padding:10px; background:#fff;"><button type="button" class="btn-remove" onclick="removeElement('box-${prefix}')"><i class="fa-solid fa-trash"></i></button><div id="input-container-${prefix}"><input type="file" class="elegant-input form-control-sm" accept="image/*" onchange="handleLampiranBase64(event, 'img-${prefix}', 'input-container-${prefix}', 'success-container-${prefix}')"></div><div id="success-container-${prefix}" class="d-none mt-2 p-2 bg-light rounded border text-center"><span class="badge bg-success mb-2"><i class="fa-solid fa-check-circle"></i> File Tersimpan</span><br><button type="button" class="btn btn-sm btn-outline-secondary" onclick="resetLampiran('img-${prefix}', 'input-container-${prefix}', 'success-container-${prefix}')"><i class="fa-solid fa-rotate"></i> Ganti File</button></div><img id="img-${prefix}" class="lampiran-data-${type} d-none mt-2 rounded shadow-sm mx-auto" style="max-height: 80px; border: 1px solid #eaeaea;"></div>`; document.getElementById(containerId).insertAdjacentHTML('beforeend', html); }
+  function resetLampiran(imgId, inputContId, succContId) { document.getElementById(imgId).removeAttribute('src'); document.getElementById(imgId).classList.add('d-none'); document.getElementById(inputContId).classList.remove('d-none'); document.getElementById(succContId).classList.add('d-none'); document.getElementById(inputContId).querySelector('input[type="file"]').value = ""; updatePreview(); }
   function setFileBadge(prefix) { document.getElementById(`input-container-${prefix}`).classList.add('d-none'); document.getElementById(`success-container-${prefix}`).classList.remove('d-none'); }
-
-  function handleLampiranBase64(event, imgId, inputContId, succContId) { 
-      const file = event.target.files[0]; const imgEl = document.getElementById(imgId); 
-      if(!file) { resetLampiran(imgId, inputContId, succContId); return; } 
-      const reader = new FileReader(); reader.onload = function(e) { const img = new Image(); img.onload = function() { const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d'); let width = img.width; let height = img.height; const MAX_WIDTH = 800; const MAX_HEIGHT = 1000; if (width > height) { if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; } } else { if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; } } canvas.width = width; canvas.height = height; ctx.drawImage(img, 0, 0, width, height); const dataUrl = canvas.toDataURL('image/jpeg', 0.6); imgEl.src = dataUrl; imgEl.classList.remove('d-none'); document.getElementById(inputContId).classList.add('d-none'); document.getElementById(succContId).classList.remove('d-none'); updatePreview(); }; img.src = e.target.result; }; reader.readAsDataURL(file); 
-  }
-  
-  function rebuildGallery(type) { 
-      let galleryId = `lampiran-${type}-gallery`; let areaId = `lampiran-${type}-area`; let imgClass = `lampiran-data-${type}`; 
-      const gallery = document.getElementById(galleryId); gallery.innerHTML = ''; let hasImages = false; 
-      
-      document.querySelectorAll(`img.${imgClass}`).forEach(img => { 
-          let src = img.src; 
-          if(src && (src.startsWith('data:image') || src.startsWith('http'))) { 
-              hasImages = true; 
-              const linkWrapper = document.createElement('a'); linkWrapper.href = src; linkWrapper.target = '_blank'; linkWrapper.style.display = 'block'; linkWrapper.style.textDecoration = 'none';
-              const newImg = document.createElement('img'); newImg.src = src; newImg.setAttribute('width', '600'); newImg.style.width = '100%'; newImg.style.maxWidth = '600px'; newImg.style.marginBottom = '20px'; newImg.style.display = 'block'; newImg.style.marginLeft = 'auto'; newImg.style.marginRight = 'auto';
-              newImg.classList.add('clickable-preview');
-              linkWrapper.appendChild(newImg); gallery.appendChild(linkWrapper); 
-          } 
-      }); 
-      document.getElementById(areaId).style.display = hasImages ? 'block' : 'none'; 
-  }
+  function handleLampiranBase64(event, imgId, inputContId, succContId) { const file = event.target.files[0]; const imgEl = document.getElementById(imgId); if(!file) { resetLampiran(imgId, inputContId, succContId); return; } const reader = new FileReader(); reader.onload = function(e) { const img = new Image(); img.onload = function() { const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d'); let width = img.width; let height = img.height; const MAX_WIDTH = 800; const MAX_HEIGHT = 1000; if (width > height) { if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; } } else { if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; } } canvas.width = width; canvas.height = height; ctx.drawImage(img, 0, 0, width, height); const dataUrl = canvas.toDataURL('image/jpeg', 0.6); imgEl.src = dataUrl; imgEl.classList.remove('d-none'); document.getElementById(inputContId).classList.add('d-none'); document.getElementById(succContId).classList.remove('d-none'); updatePreview(); }; img.src = e.target.result; }; reader.readAsDataURL(file); }
+  function rebuildGallery(type) { let galleryId = `lampiran-${type}-gallery`; let areaId = `lampiran-${type}-area`; let imgClass = `lampiran-data-${type}`; const gallery = document.getElementById(galleryId); gallery.innerHTML = ''; let hasImages = false; document.querySelectorAll(`img.${imgClass}`).forEach(img => { let src = img.src; if(src && (src.startsWith('data:image') || src.startsWith('http'))) { hasImages = true; const linkWrapper = document.createElement('a'); linkWrapper.href = src; linkWrapper.target = '_blank'; linkWrapper.style.display = 'block'; linkWrapper.style.textDecoration = 'none'; const newImg = document.createElement('img'); newImg.src = src; newImg.setAttribute('width', '600'); newImg.style.width = '100%'; newImg.style.maxWidth = '600px'; newImg.style.marginBottom = '20px'; newImg.style.display = 'block'; newImg.style.marginLeft = 'auto'; newImg.style.marginRight = 'auto'; newImg.classList.add('clickable-preview'); linkWrapper.appendChild(newImg); gallery.appendChild(linkWrapper); } }); document.getElementById(areaId).style.display = hasImages ? 'block' : 'none'; }
 
   function addWorkExp() { workExpCount++; const id = `work-${workExpCount}`; const html = `<div class="dynamic-box" id="${id}"><button type="button" class="btn-remove" onclick="removeElement('${id}')"><i class="fa-solid fa-trash"></i></button><input type="text" class="elegant-input mb-2 work-period" placeholder="Periode (Misal: 2020 - Sekarang)" oninput="updatePreview()"><input type="text" class="elegant-input mb-2 work-company" placeholder="Nama Perusahaan" oninput="updatePreview()"><input type="text" class="elegant-input mb-2 work-role" placeholder="Posisi" oninput="updatePreview()"><textarea class="elegant-input work-desc" rows="2" placeholder="Deskripsi (Pisahkan dgn enter)" oninput="updatePreview()"></textarea></div>`; document.getElementById('workExpContainer').insertAdjacentHTML('beforeend', html); }
   function addProjExp() { projExpCount++; const id = `proj-${projExpCount}`; const html = `<div class="dynamic-box" id="${id}"><button type="button" class="btn-remove" onclick="removeElement('${id}')"><i class="fa-solid fa-trash"></i></button><input type="text" class="elegant-input mb-2 proj-year" placeholder="Tahun (Misal: 2023)" oninput="updatePreview()"><input type="text" class="elegant-input mb-2 proj-client" placeholder="Nama Klien / Project" oninput="updatePreview()"><input type="text" class="elegant-input mb-2 proj-role" placeholder="Posisi di Project" oninput="updatePreview()"><textarea class="elegant-input proj-desc" rows="2" placeholder="Deskripsi pekerjaan (Pisahkan dgn enter)" oninput="updatePreview()"></textarea></div>`; document.getElementById('projExpContainer').insertAdjacentHTML('beforeend', html); }
@@ -587,10 +554,6 @@
   }
 
   function downloadPDF() { Swal.fire({ title: 'Perhatian untuk Cetak PDF', html: 'Pastikan untuk <b>HAPUS CENTANG</b> pada opsi <b>"Headers and footers"</b> di menu setelan agar tulisan URL hilang.', icon: 'info', confirmButtonText: 'Mengerti, Cetak', confirmButtonColor: '#15a362' }).then((result) => { if(result.isConfirmed) { setTimeout(() => { window.print(); }, 500); } }); }
-
-  function downloadWord() {
-    Toast.fire({ icon: 'info', title: 'Menyiapkan file Word...' }); const cvHtml = document.getElementById('cv-document').innerHTML; const header = atob("PGh0bWwgeG1sbnM6bz0ndXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6b2ZmaWNlJyB4bWxuczp3PSd1cm46c2NoZW1hcy1taWNyb3NvZnQtY29tOm9mZmljZTp3b3JkJyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvVFIvUkVDLWh0bWw0MCc+PGhlYWQ+PG1ldGEgY2hhcnNldD0ndXRmLTgnPjx0aXRsZT5DVjwvdGl0bGU+PHN0eWxlPkBwYWdlIFdvcmRTZWN0aW9uMSB7IHNpemU6IDU5NS4zcHQgODQxLjlwdDsgbWFyZ2luOiA1Ni43cHQgNTYuN3B0IDU2LjdwdCA1Ni43cHQ7IH0gZGl2LldvcmRTZWN0aW9uMSB7IHBhZ2U6IFdvcmRTZWN0aW9uMTsgfSBib2R5IHsgZm9udC1mYW1pbHk6ICdUaW1lcyBOZXcgUm9tYW4nLCBUaW1lcywgc2VyaWY7IGZvbnQtc2l6ZTogMTRweDsgbGluZS1oZWlnaHQ6IDEuNTsgY29sb3I6ICMwMDA7IH0gaW1nIHsgbWF4LXdpZHRoOiAxMDAlOyB9PC9zdHlsZT48L2hlYWQ+PGJvZHk+PGRpdiBjbGFzcz0nV29yZFNlY3Rpb24xJz4="); const footer = atob("PC9kaXY+PC9ib2R5PjwvaHRtbD4="); const html = header + cvHtml + footer; const blob = new Blob(['\ufeff', html], { type: 'application/msword' }); const url = URL.createObjectURL(blob); const link = document.createElement('A'); link.href = url; const name = document.getElementById('name').value || 'CV'; link.download = 'CV_' + name.replace(/\s+/g, '_') + '.doc'; document.body.appendChild(link); link.click(); document.body.removeChild(link); Toast.fire({ icon: 'success', title: 'Word Berhasil Diunduh!' });
-  }
 </script>
 </body>
 </html>
